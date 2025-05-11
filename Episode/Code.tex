@@ -1,0 +1,912 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+%==========================================TIÊU ĐỀ TẬP========================================
+\begin{table}[h]
+\begin{adjustwidth}{-1cm}{}
+    \begin{tabular}{>{\centering\arraybackslash}p{6cm}|>{\raggedright\arraybackslash}p{12.5cm}}
+        \multirow{5}{6cm}
+        % Dòng đầu tiên: ÉPISODE và số tập
+        {\\[-40pt]
+        \flaregothic\fontsize{20pt}{20pt}\selectfont \centering 
+        \color{eptype}CHAPTER\color{black}\\
+        \flaregothic\fontsize{72pt}{72pt}\selectfont
+        \color{epnum}3
+        \\[18pt]
+        }
+        & {\vnmsans\fontsize{36pt}{36pt}\selectfont Thực hành}\\[8pt]
+        \color{black}
+        & Trong chương này, ta sẽ tìm hiểu các nội dung chính sau:
+        \begin{itemize}
+            \item Phần chuẩn bị
+            \item Code chính của từng loại mạng: CNN, FCN và ResNet
+            \item Đánh giá và kết luận.
+        \end{itemize}
+        \\[-20pt]
+        \end{tabular}
+\end{adjustwidth}
+\end{table}
+%=========================================TRUYỆN CHÍNH========================================
+\subsection*{1. Chuẩn bị}
+\addcontentsline{toc}{subsection}{Chuẩn bị}
+
+Để thực hiện cho bài thực nghiệm phân loại ảnh từ tập dữ liệu CIFAR-10 bằng PyTorch, ta cần có:
+\begin{itemize}
+    \item Python 3.11.9, chạy trên Visual Studio Code
+    \item PyTorch (được cài qua lệnh \verb|pip install torch|)
+    \item Bộ dữ liệu CIFAR-10 (qua gói \verb|torchvision|)
+    \item Các công cụ hỗ trợ liên quan.
+\end{itemize}
+
+Bộ dữ liệu CIFAR-10 có thể lấy trên trực tiếp của trang chủ PyTorch hoặc ở những nguồn khác, nhưng trong bài tập lớn này, ta sẽ dùng trực tiếp trên PyTorch đã cung cấp sẵn.
+
+Cả ba mô hình này đều sẽ chạy trên CPU - mặc định của PyTorch, nên kết quả có thể sẽ khác so với lý thuyết.
+
+\subsection*{2. Lập trình}
+\addcontentsline{toc}{subsection}{Lập trình}
+
+\subsubsection*{Khởi tạo}
+\addcontentsline{toc}{subsubsection}{Khởi tạo}
+
+Trước hết, ta sẽ import (khởi tạo) các gói sau:
+\begin{verbatim}
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+import numpy as np
+import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader
+import torchvision
+import torchvision.transforms as transforms
+import torchvision.models as models
+from tqdm.notebook import tqdm
+\end{verbatim}
+
+với \verb|torch| và \verb|torchvision| là các gói để hỗ trợ cho bài tập này; gói NumPy để tính toán, MatPlotLib để vẽ biểu đồ và \verb|tqdm| để hiện thanh tiến trình.
+
+\subsubsection*{Định nghĩa hàm CNN}
+\addcontentsline{toc}{subsubsection}{Định nghĩa hàm CNN}
+
+\begin{verbatim}
+    class CIFAR10CNN(nn.Module):
+    def __init__(self):
+        super(CIFAR10CNN, self).__init__()
+        # Convolutional layers
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, padding=1)
+        
+        # Pooling layer
+        self.pool = nn.MaxPool2d(2, 2)
+        
+        # Batch normalization layers
+        self.bn1 = nn.BatchNorm2d(32)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.bn3 = nn.BatchNorm2d(128)
+        
+        # Dropout layer
+        self.dropout = nn.Dropout(0.5)
+        
+        # Fully connected layers
+        # After 3 pooling layers of stride 2, the 32x32 image
+        # becomes 4x4
+        self.fc1 = nn.Linear(128 * 4 * 4, 512)
+        self.fc2 = nn.Linear(512, 10)
+
+    def forward(self, x):
+        # First convolutional block
+        x = self.pool(F.relu(self.bn1(self.conv1(x))))
+        
+        # Second convolutional block
+        x = self.pool(F.relu(self.bn2(self.conv2(x))))
+        
+        # Third convolutional block
+        x = self.pool(F.relu(self.bn3(self.conv3(x))))
+        
+        # Flatten the feature maps
+        x = x.view(-1, 128 * 4 * 4)
+        
+        # Fully connected layers with dropout
+        x = self.dropout(F.relu(self.fc1(x)))
+        x = self.fc2(x)
+        
+        return x
+\end{verbatim}
+
+Như ta có thể thấy, hàm khởi tạo được chia thành hai hàm khác nhỏ hơn: \verb|__init__| và \verb|forward| với hai giá trị là (self, x). Trong đó có các lớp:
+
+\begin{itemize}
+    \item Lớp tích chập 3x32
+    \item Lớp tích chập 32x64
+    \item Lớp tích chập 64x128
+    \item Lớp Pooling 2x2, lấy giá trị lớn nhất, stride = 3 và lớp padding = 1 => ảnh 4x4.
+    \item Ba lớp chuẩn hóa: 32, 64 và 128.
+    \item Lớp dropout có giá trị là 0,5
+    \item Lớp FC 128x4x4.
+\end{itemize}
+
+Còn trong FCN, ta có:
+
+\begin{verbatim}
+    class CIFAR10FCN(nn.Module):
+    def __init__(self):
+        super(CIFAR10FCN, self).__init__()
+        # CIFAR-10 images are 32x32x3 = 3072 
+        # pixels when flattened
+        self.fc1 = nn.Linear(3072, 1024)
+        self.fc2 = nn.Linear(1024, 512)
+        self.fc3 = nn.Linear(512, 256)
+        self.fc4 = nn.Linear(256, 128)
+        self.fc5 = nn.Linear(128, 10)
+        
+        self.dropout = nn.Dropout(0.5)
+        self.bn1 = nn.BatchNorm1d(1024)
+        self.bn2 = nn.BatchNorm1d(512)
+        self.bn3 = nn.BatchNorm1d(256)
+        self.bn4 = nn.BatchNorm1d(128)
+
+    def forward(self, x):
+        # Flatten the input image
+        x = x.view(-1, 3*32*32)
+        
+        # First hidden layer
+        x = self.fc1(x)
+        x = self.bn1(x)
+        x = F.relu(x)
+        x = self.dropout(x)
+        
+        # Second hidden layer
+        x = self.fc2(x)
+        x = self.bn2(x)
+        x = F.relu(x)
+        x = self.dropout(x)
+        
+        # Third hidden layer
+        x = self.fc3(x)
+        x = self.bn3(x)
+        x = F.relu(x)
+        x = self.dropout(x)
+        
+        # Fourth hidden layer
+        x = self.fc4(x)
+        x = self.bn4(x)
+        x = F.relu(x)
+        x = self.dropout(x)
+        
+        # Output layer
+        x = self.fc5(x)
+        
+        return x
+\end{verbatim}
+
+Với:
+
+\begin{itemize}
+    \item \verb|self.fc|: Lớp kết nối đầy đủ (fully connected layer) áp dụng một phép biến đổi tuyến tính cho đầu vào. Các lớp sau sẽ lấy giá trị lớp trước để biến đổi.
+    \item \verb|self.bn1(x)|: Lớp chuẩn hóa batch (batch normalization) giúp tăng tốc độ huấn luyện và ổn định mạng.
+    \item \verb|F.relu(x)|: Hàm kích hoạt ReLU (Rectified Linear Unit) áp dụng phi tuyến tính cho đầu ra.
+    \item \verb|self.dropout(x)|: Lớp dropout giúp giảm overfitting bằng cách ngẫu nhiên bỏ qua một số đơn vị trong quá trình huấn luyện.
+\end{itemize}
+
+\subsubsection*{Tải dữ liệu của CIFAR-10}
+\addcontentsline{toc}{subsubsection}{Tải dữ liệu của CIFAR-10}
+
+Ta có các hàm sau:
+
+\begin{verbatim}
+    def load_cifar10_data(batch_size=128):
+    """
+    Load and prepare CIFAR-10 data with data augmentation 
+    for training
+    """
+    # Define transformations for training (with augmentation)
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), 
+        (0.5, 0.5, 0.5))
+    ])
+    
+    # Define transformations for testing (no augmentation)
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.5, 0.5, 0.5), 
+        (0.5, 0.5, 0.5))
+    ])
+    
+    # Load datasets
+    train_dataset = torchvision.datasets.CIFAR10(
+        root='./data', 
+        train=True,
+        download=True, 
+        transform=transform_train
+    )
+    
+    test_dataset = torchvision.datasets.CIFAR10(
+        root='./data', 
+        train=False,
+        download=True, 
+        transform=transform_test
+    )
+    
+    # Create dataloaders
+    train_loader = DataLoader(
+        train_dataset, 
+        batch_size=batch_size,
+        shuffle=True, 
+        num_workers=2
+    )
+    
+    test_loader = DataLoader(
+        test_dataset, 
+        batch_size=batch_size,
+        shuffle=False, 
+        num_workers=2
+    )
+    
+    return train_loader, test_loader
+\end{verbatim}
+
+Tùy theo mô hình ResNet, CNN hay FCN, hệ số chuẩn hóa (gồm hai bộ ba số, lần lượt đại diện cho giá trị trung bình và độ lệch chuẩn) có thể khác nhau. Với CNN, đó là bộ ba (0.5, 0.5, 0.5), (0.5, 0.5, 0.5).
+
+Với ResNet-50 và FCN, đó là (0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616).
+
+Trong hàm này, ta có thể thấy:
+
+\begin{itemize}
+    \item \verb|transforms.Compose|: Đây là một hàm dùng để kết hợp nhiều phép biến đổi lại với nhau. Các phép biến đổi sẽ được áp dụng tuần tự theo thứ tự mà chúng được liệt kê.
+    \item \verb|transforms.RandomCrop|: Phép biến đổi này cắt ngẫu nhiên một phần của ảnh với kích thước xác định (ở đây là 32x32) và thêm padding (ở đây là 4 pixel) xung quanh ảnh trước khi cắt.
+    \item \verb|transforms.RandomHorizontalFlip|: Phép biến đổi này lật ngẫu nhiên ảnh theo chiều ngang với xác suất 50\%.
+    \item \verb|transforms.ToTensor|: Phép biến đổi này chuyển đổi ảnh từ định dạng PIL hoặc numpy array thành tensor của PyTorch. Đồng thời, nó cũng chuẩn hóa giá trị của ảnh từ khoảng [0, 255] về khoảng [0.0, 1.0].
+    \item \verb|transforms.Normalize|: Phép biến đổi này chuẩn hóa tensor ảnh bằng cách trừ đi giá trị trung bình và chia cho độ lệch chuẩn. Ở đây, giá trị trung bình và độ lệch chuẩn cho cả ba kênh màu (RGB) đều là 0.5.
+    \item \verb|torchvision.datasets.CIFAR10|: Đây là hàm để tải bộ dữ liệu CIFAR-10. Các tham số bao gồm:
+    \begin{itemize}
+        \item \verb|root='./data'|: Đường dẫn để lưu trữ dữ liệu.
+        \item \verb|train=True|: Chỉ định rằng đây là dữ liệu huấn luyện.
+        \item \verb|download=True|: Tự động tải dữ liệu nếu chưa có sẵn.
+        \item \verb|transform=transform_train|: Áp dụng các phép biến đổi đã định nghĩa cho dữ liệu huấn luyện.
+    \end{itemize}
+\end{itemize}
+
+Tuy nhiên, với mạng ResNet-50, khởi tạo hàm lại rất khác:
+
+\begin{verbatim}
+    def get_resnet50_model
+    (num_classes=10, pretrained=True):
+    """
+    Get a ResNet-50 model, optionally pretrained, 
+    and modify it for CIFAR-10
+    """
+    # Load pretrained ResNet-50
+    if pretrained:
+        model = models.resnet50
+        (weights=models.ResNet50_Weights.DEFAULT)
+        print("Loaded pretrained ResNet-50")
+    else:
+        model = models.resnet50(weights=None)
+        print("Loaded ResNet-50 with random weights")
+    
+    # Modify the first convolutional layer to 
+    # handle 32x32 input
+    # ResNet is designed for 224x224 images, but we keep the 
+    # architecture as is and don't modify the first layer as 
+    the smaller input will work through the network
+    
+    # Modify the final fully connected layer 
+    # for 10 classes
+    model.fc = nn.Linear(model.fc.in_features, 
+                         num_classes)
+    
+    return model
+\end{verbatim}
+
+Với:
+
+\begin{itemize}
+    \item Phần định nghĩa hàm (\verb|get_resnet50_model|) gồm có hai tham số: \verb|num_classes| là số lượng lớp đầu ra (mặc định là 10, phù hợp với CIFAR-10), và \verb|pretrained| là số lượng lớp đầu ra (mặc định là 10, phù hợp với CIFAR-10).
+    \item Hàm if-else:
+    \begin{itemize}
+        \item Nếu \verb|pretrained| là True, mô hình ResNet-50 sẽ được tải với trọng số đã được huấn luyện trước.
+        \item Nếu \verb|pretrained| là False, mô hình ResNet-50 sẽ được tải với trọng số ngẫu nhiên.
+    \end{itemize}
+    \item Lớp fully connected cuối cùng của mô hình ResNet-50 được thay thế bằng một lớp mới với số lượng đầu ra bằng \verb|num_classes| (10 lớp cho CIFAR-10).
+\end{itemize}
+
+\subsubsection*{Tính toán hàm mất mát}
+\addcontentsline{toc}{subsubsection}{Tính toán hàm mất mát}
+
+\begin{verbatim}
+    def calculate_loss(model, data_loader, device, criterion):
+    """ Calculate the loss of the model on a given dataset """
+    model.eval()  # Set model to evaluation mode
+    running_loss = 0.0
+    total_samples = 0
+    
+    with torch.no_grad():  # No need to track gradients
+        for images, labels in data_loader:
+            images, labels = images.to(device), 
+                             labels.to(device)
+            
+            # Forward pass
+            outputs = model(images)
+            
+            # Calculate loss
+            loss = criterion(outputs, labels)
+            
+            # Update counters
+            batch_size = labels.size(0)
+            running_loss += loss.item() * batch_size
+            total_samples += batch_size
+    
+    # Calculate average loss
+    average_loss = running_loss / total_samples
+    return average_loss
+\end{verbatim}
+
+Trong đó hàm mất mát được tính theo cách trung bình: mất mát lúc chạy chia cho tổng số mẫu. Hàm này sẽ tính cho cả tập huấn luyện và tập kiểm nghiệm.
+
+\subsubsection*{Tính toán độ chính xác}
+\addcontentsline{toc}{subsubsection}{Tính toán độ chính xác}
+
+\begin{verbatim}
+    def calculate_accuracy(model, data_loader, device):
+    """
+    Calculate the accuracy of the model on a given dataset
+    """
+    model.eval()  # Set model to evaluation mode
+    correct = 0
+    total = 0
+    
+    with torch.no_grad():  # No need to track gradients
+        for images, labels in data_loader:
+            images, labels = images.to(device), labels.to(device)
+            
+            # Forward pass
+            outputs = model(images)
+            
+            # Get predictions
+            _, predicted = torch.max(outputs.data, 1)
+            
+            # Update counters
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+    
+    # Calculate accuracy
+    accuracy = 100 * correct / total
+    return accuracy
+\end{verbatim}
+
+Tương tự như trên, tính theo tỷ lệ phần trăm, tính bằng số hình đoán đúng chia cho tổng số hình.
+
+\subsubsection*{Huấn luyện và kiểm thử mô hình}
+\addcontentsline{toc}{subsubsection}{Huấn luyện và kiểm thử mô hình}
+
+\begin{verbatim}
+    def train_model(model, train_loader, test_loader, 
+                  num_epochs=10, learning_rate=0.001):
+    """
+    Train the model and evaluate its performance
+    """
+    # Determine device
+    device = torch.device("cuda:0" 
+           if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+    
+    # Move model to device
+    model = model.to(device)
+    
+    # Loss function and optimizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), 
+                lr=learning_rate, weight_decay=1e-4)
+    
+    # Learning rate scheduler
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, 
+        mode='max', 
+        factor=0.1, 
+        patience=3, 
+        verbose=True
+    )
+    
+    # Lists to store metrics
+    train_losses = []
+    test_losses = []
+    train_accuracies = []
+    test_accuracies = []
+    
+    # Training loop
+    for epoch in range(num_epochs):
+        model.train()  # Set model to training mode
+        running_loss = 0.0
+        
+        # Use tqdm for progress bar
+        progress_bar = tqdm(train_loader, 
+        desc=f"Epoch {epoch+1}/{num_epochs}")
+        
+        for i, (images, labels) in enumerate(progress_bar):
+            images, labels = images.to(device), 
+            labels.to(device)
+            
+            # Zero the gradients
+            optimizer.zero_grad()
+            
+            # Forward pass
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            
+            # Backward pass and optimize
+            loss.backward()
+            optimizer.step()
+            
+            # Update running loss
+            running_loss += loss.item()
+            
+            # Update progress bar
+            if i % 50 == 49:
+                progress_bar.set_postfix({
+                    'loss': running_loss / 50
+                })
+                running_loss = 0.0
+
+        train_accuracy = calculate_accuracy
+                         (model, train_loader, device)
+        test_accuracy = calculate_accuracy
+                        (model, test_loader, device)
+        train_loss = calculate_loss
+                     (model, train_loader, device, criterion)
+        test_loss = calculate_loss
+                    (model, test_loader, device, criterion)
+        
+        # Store metrics
+        train_accuracies.append(train_accuracy)
+        test_accuracies.append(test_accuracy)
+        train_losses.append(train_loss)
+        test_losses.append(test_loss)
+        
+        # Update learning rate based on validation performance
+        scheduler.step(test_accuracy)
+        
+        # Print epoch results
+        print(f"Epoch {epoch+1}/{num_epochs}:")
+        print(f"  Train Accuracy: {train_accuracy:.2f}%, 
+                  Train Loss: {train_loss:.4f}")
+        print(f"  Test Accuracy: {test_accuracy:.2f}%, 
+                  Test Loss: {test_loss:.4f}")
+    
+    print("Training completed!")
+\end{verbatim}
+
+Trong đó:
+
+\begin{itemize}
+    \item Xác định thiết bị (device) sử dụng hàm \verb|torch.device|: Đoạn mã này kiểm tra xem GPU có sẵn hay không và sử dụng nó nếu có, nếu không sẽ sử dụng CPU.
+    \item Di chuyển mô hình sang thiết bị: Mô hình được chuyển sang thiết bị đã xác định (GPU hoặc CPU).
+    \item Hàm mất mát và bộ tối ưu hóa (\verb|criterion| và |optimizer|): Sử dụng hàm mất mát CrossEntropyLoss và bộ tối ưu hóa Adam với các tham số của mô hình.
+    \item Bộ điều chỉnh tốc độ học (\verb|ReduceLROnPlateau|): Bộ điều chỉnh tốc độ học giảm tốc độ học khi hiệu suất không cải thiện sau một số epoch nhất định; factor mang giá trị 0.1 với ResNet và 0.5 với CNN và FCN.
+    \item Danh sách lưu trữ các chỉ số: Các danh sách này được sử dụng để lưu trữ các chỉ số về mất mát và độ chính xác trong quá trình huấn luyện và kiểm tra.
+    \item Vòng lặp huấn luyện, với các thông số sau:
+    \begin{itemize}
+        \item Chế độ huấn luyện: Đặt mô hình vào chế độ huấn luyện.
+        \item Thanh tiến trình: Sử dụng tqdm để hiển thị thanh tiến trình.
+        \item Vòng lặp qua các batch: Lặp qua từng batch trong \verb|train_loader|.
+        \item Chuyển dữ liệu sang thiết bị: Chuyển hình ảnh và nhãn sang thiết bị.
+        \item Đặt lại gradient: Đặt lại gradient của bộ tối ưu hóa.
+        \item Lan truyền xuôi: Tính toán đầu ra của mô hình.
+        \item Lan truyền ngược và tối ưu hóa: Tính toán gradient và cập nhật các tham số của mô hình.
+        \item Cập nhật mất mát: Cập nhật giá trị mất mát và hiển thị trên thanh tiến trình.
+    \end{itemize}
+    \item Các hàm tính toán độ chính xác và hàm mất mát và lưu trữ chúng.
+\end{itemize}
+
+\subsubsection*{Vẽ biểu đồ độ chính xác và hàm mất mát theo từng epoch}
+\addcontentsline{toc}{subsubsection}{Vẽ biểu đồ độ chính xác và hàm mất mát theo từng epoch}
+
+\begin{verbatim}
+    # Plot training curves
+    plt.figure(figsize=(15, 6))
+    
+    # Plot accuracies
+    plt.plot(range(1, num_epochs+1), 
+             train_accuracies, 
+             label='Train Accuracy')
+    plt.plot(range(1, num_epochs+1), 
+             test_accuracies, 
+             label='Test Accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy (%)')
+    plt.title('Training and Testing Accuracy')
+    plt.legend()
+    plt.grid(True)
+    
+    # Plot losses
+    plt.subplot(1, 2, 2)
+    plt.plot(range(1, num_epochs+1), 
+             train_losses, 
+             label='Train Loss')
+    plt.plot(range(1, num_epochs+1), 
+             test_losses, 
+             label='Test Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Training and Testing Loss')
+    plt.legend()
+    plt.grid(True)
+    
+    plt.tight_layout()
+    plt.show()
+    
+    return {
+        'train_accuracies': train_accuracies,
+        'test_accuracies': test_accuracies,
+        'train_losses': train_losses,
+        'test_losses': test_losses,
+        'best_test_accuracy': max(test_accuracies),
+        'best_test_loss': min(test_losses)
+    }
+\end{verbatim}
+
+\begin{verbatim}
+    def plot_accuracy_loss_correlation(metrics):
+    """
+    Plot the correlation between accuracy and loss
+    """
+    plt.figure(figsize=(10, 6))
+    plt.scatter(metrics['train_losses'], 
+                metrics['train_accuracies'], 
+                label='Training', alpha=0.7)
+    plt.scatter(metrics['test_losses'], 
+                metrics['test_accuracies'], 
+                label='Testing', alpha=0.7)
+    
+    # Add best fit lines
+    train_z = np.polyfit(metrics['train_losses'], 
+              metrics['train_accuracies'], 1)
+    train_p = np.poly1d(train_z)
+    
+    test_z = np.polyfit(metrics['test_losses'], 
+             metrics['test_accuracies'], 1)
+    test_p = np.poly1d(test_z)
+    
+    x_train = np.linspace(min(metrics['train_losses']), 
+              max(metrics['train_losses']), 100)
+    x_test = np.linspace(min(metrics['test_losses']), 
+             max(metrics['test_losses']), 100)
+    
+    plt.plot(x_train, train_p(x_train), "r--", alpha=0.7)
+    plt.plot(x_test, test_p(x_test), "b--", alpha=0.7)
+    
+    plt.xlabel('Loss')
+    plt.ylabel('Accuracy (%)')
+    plt.title('Correlation between Loss and Accuracy')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+    
+    # Calculate correlation coefficient
+    train_corr = np.corrcoef(metrics['train_losses'], 
+                 metrics['train_accuracies'])[0, 1]
+    test_corr = np.corrcoef(metrics['test_losses'], 
+                metrics['test_accuracies'])[0, 1]
+    
+    print(f"Training correlation coefficient: {train_corr:.4f}")
+    print(f"Testing correlation coefficient: {test_corr:.4f}")
+\end{verbatim}
+
+\subsubsection*{Hàm main}
+\addcontentsline{toc}{subsubsection}{Hàm main}
+
+Sau khi tất cả các hàm trên được viết, ta sẽ có một hàm main để chạy tất cả mọi thứ cùng một lúc (trên Jupyter Notebook):
+
+\begin{verbatim}
+    if __name__ == "__main__":
+    # Set random seed for reproducibility
+    torch.manual_seed(42)
+    np.random.seed(42)
+    
+    # Load data
+    train_loader, test_loader = load_cifar10_data(batch_size=64)
+    
+    # Create ResNet-50 model
+    model = get_resnet50_model(num_classes=10, pretrained=True)
+    
+    # Print model architecture summary
+    print(f"Model: ResNet-50")
+    
+    # Calculate total parameters
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() 
+          if p.requires_grad)
+    print(f"Total parameters: {total_params:,}")
+    print(f"Trainable parameters: {trainable_params:,}")
+    
+    # Train model (reduced epochs for demonstration)
+    metrics = train_model(model, train_loader, test_loader, 
+              num_epochs=5, learning_rate=0.0001)
+    
+    # Visualize some predictions
+    visualize_predictions(model, test_loader)
+    
+    # Plot confusion matrix
+    device = torch.device("cuda:0" 
+             if torch.cuda.is_available() else "cpu")
+    confusion_matrix_plot(model, test_loader, device)
+
+    # Print best metrics achieved
+    print(f"Best test accuracy: 
+           {metrics['best_test_accuracy']:.2f}%")
+    print(f"Best test loss: {metrics['best_test_loss']:.4f}")
+    
+    # Compare with baseline (random guessing)
+    print(f"Baseline (random guessing): 10.00%")
+    print(f"Improvement over baseline: 
+            {metrics['best_test_accuracy'] - 10.00:.2f}%")
+\end{verbatim}
+
+\subsection*{3. Kiểm nghiệm}
+\addcontentsline{toc}{subsection}{Kiểm nghiệm}
+
+\subsubsection*{Mô hình CNN}
+\addcontentsline{toc}{subsubsection}{Mô hình CNN}
+
+Ta có thông tin của các lớp sau:
+
+\img{2-2c}
+
+Thông số của 5 epoch:
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Epoch} & \textbf{Độ chính xác} & \textbf{Độ mất mát} \\
+            \hline
+            1 & 57.04\% & 1.1905 \\
+            \hline
+            2 & 61.99\% & 1.0838 \\
+            \hline
+            3 & 67.86\% & 0.8974 \\
+            \hline
+            4 & 70.57\% & 0.8345 \\
+            \hline
+            5 & 69.56\% & 0.8509 \\
+            \hline
+        \end{tabular}
+        \caption{Training}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Epoch} & \textbf{Độ chính xác} & \textbf{Độ mất mát} \\
+            \hline
+            1 & 57.20\% & 1.1544 \\
+            \hline
+            2 & 63.35\% & 1.0327 \\
+            \hline
+            3 & 70.44\% & 0.8453 \\
+            \hline
+            4 & 72.60\% & 0.7866 \\
+            \hline
+            5 & 72.23\% & 0.8043 \\
+            \hline
+        \end{tabular}
+        \caption{Testing}
+    \end{subfigure}
+    \caption{Thông số tính độ chính xác và độ mất mát của mô hình CNN}
+\end{figure}
+
+Ta cũng có: 
+
+- Training: Độ chính xác cao nhất: 70.57\% và giá trị mất mát thấp nhất: 0.8345.
+
+- Testing: Độ chính xác cao nhất: 72.60\% và giá trị mất mát thấp nhất: 0.7866.
+
+Biểu đồ:
+
+\img{2-2a}
+
+\subsubsection*{Mô hình FCN}
+\addcontentsline{toc}{subsubsection}{Mô hình FCN}
+
+\img{2-4c}
+
+Thông số của 5 epoch:
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Epoch} & \textbf{Độ chính xác} & \textbf{Độ mất mát} \\
+            \hline
+            1 & 42.48\% & 1.6071 \\
+            \hline
+            2 & 46.41\% & 1.4979 \\
+            \hline
+            3 & 49.12\% & 1.4358 \\
+            \hline
+            4 & 49.34\% & 1.4130 \\
+            \hline
+            5 & 51.97\% & 1.3578 \\
+            \hline
+            6 & 52.98\% & 1.3231 \\
+            \hline
+            7 & 54.21\% & 1.2969 \\
+            \hline
+            8 & 54.57\% & 1.2729 \\
+            \hline
+            9 & 55.56\% & 1.2515 \\
+            \hline
+            10 & 55.85\% & 1.2415 \\
+            \hline
+            11 & 56.84\% & 1.2275 \\
+            \hline
+            12 & 57.70\% & 1.1996 \\
+            \hline
+            13 & 58.33\% & 1.1834 \\
+            \hline
+            14 & 58.38\% & 1.1732 \\
+            \hline
+            15 & 59.26\% & 1.1552 \\
+            \hline
+            16 & 59.70\% & 1.1437 \\
+            \hline
+            17 & 59.85\% & 1.1352 \\
+            \hline
+            18 & 60.32\% & 1.1254 \\
+            \hline
+            19 & 60.73\% & 1.1119 \\
+            \hline
+            20 & 61.52\% & 1.0974 \\
+            \hline
+        \end{tabular}
+        \caption{Training}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Epoch} & \textbf{Độ chính xác} & \textbf{Độ mất mát} \\
+            \hline
+            1 & 43.25\% & 1.6048 \\
+            \hline
+            2 & 46.27\% & 1.5033 \\
+            \hline
+            3 & 48.73\% & 1.4524 \\
+            \hline
+            4 & 49.28\% & 1.4359 \\
+            \hline
+            5 & 50.69\% & 1.3914 \\
+            \hline
+            6 & 52.13\% & 1.3638 \\
+            \hline
+            7 & 52.61\% & 1.3445 \\
+            \hline
+            8 & 52.64\% & 1.3292 \\
+            \hline
+            9 & 53.37\% & 1.3116 \\
+            \hline
+            10 & 53.31\% & 1.3095 \\
+            \hline
+            11 & 53.94\% & 1.2950 \\
+            \hline
+            12 & 54.28\% & 1.2801 \\
+            \hline
+            13 & 55.16\% & 1.2676 \\
+            \hline
+            14 & 55.32\% & 1.2594 \\
+            \hline
+            15 & 55.85\% & 1.2517 \\
+            \hline
+            16 & 55.68\% & 1.2464 \\
+            \hline
+            17 & 55.71\% & 1.2431 \\
+            \hline
+            18 & 56.11\% & 1.2324 \\
+            \hline
+            19 & 56.62\% & 1.2236 \\
+            \hline
+            20 & 56.95\% & 1.2166 \\
+            \hline
+        \end{tabular}
+        \caption{Testing}
+    \end{subfigure}
+    \caption{Thông số tính độ chính xác và độ mất mát của mô hình FCN}
+\end{figure}
+
+Ta cũng có: 
+
+- Training:
+Độ chính xác cao nhất: 61.52\% và giá trị mất mát thấp nhất: 1.0974.
+
+- Testing:
+Độ chính xác cao nhất: 56.95\% và giá trị mất mát thấp nhất: 1.2166.
+
+Biểu đồ:
+
+\img{2-4a}
+
+\subsubsection*{Mô hình ResNet-50}
+\addcontentsline{toc}{subsubsection}{Mô hình ResNet-50}
+
+\img{2-3c}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Epoch} & \textbf{Độ chính xác} & \textbf{Độ mất mát} \\
+            \hline
+            1 & 76.56\% & 0.6763 \\
+            \hline
+            2 & 83.94\% & 0.4698 \\
+            \hline
+            3 & 87.06\% & 0.3799 \\
+            \hline
+            4 & 89.67\% & 0.3058 \\
+            \hline
+            5 & 90.52\% & 0.2762 \\
+            \hline
+        \end{tabular}
+        \caption{Training}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Epoch} & \textbf{Độ chính xác} & \textbf{Độ mất mát} \\
+            \hline
+            1 & 78.37\% & 0.6274 \\
+            \hline
+            2 & 83.45\% & 0.4891 \\
+            \hline
+            3 & 85.42\% & 0.4221 \\
+            \hline
+            4 & 86.48\% & 0.3871 \\
+            \hline
+            5 & 87.38\% & 0.3748 \\
+            \hline
+        \end{tabular}
+        \caption{Testing}
+    \end{subfigure}
+    \caption{Thông số tính độ chính xác và độ mất mát của mô hình ResNet-50}
+\end{figure}
+
+Ta cũng có: 
+
+- Training:
+Độ chính xác cao nhất: 90.52\% và giá trị mất mát thấp nhất: 0.2762.
+
+- Testing:
+Độ chính xác cao nhất: 87.38\% và giá trị mất mát thấp nhất: 0.3748.
+
+Biểu đồ:
+
+\img{2-3a}
+
+\subsection*{4. Nhận xét}
+\addcontentsline{toc}{subsection}{Nhận xét}
+
+Như ta có thể thấy, mô hình ResNet-50 có độ chính xác cao nhất trong ba mô hình (90.52\% khi huấn luyện và 87.38\% khi kiểm thử) nhưng đổi lại, thời gian huấn luyện là lâu nhất (85 phút).
+
+Ngược lại, mô hình FCN có tốc độ huấn luyện nhanh hơn (khoảng 40 phút) nhưng độ chính xác lại thấp nhất (61.52\% cho huấn luyện và 56.95\% cho kiểm thử).
+
+Mô hình CNN có độ chính xác là 70.57\% cho huấn luyện và 72.60\% cho kiểm nghiệm.
+
+Điều đó cho ta thấy nếu so sánh về độ chính xác thì: \[ResNet > CNN > FCN\] theo đúng lý thuyết của nó.
+
+Tuy nhiên, ta có thể cải thiện tốc độ học của chúng bằng cách thay vì sử dụng CPU thì chuyển sang GPU, vì nó được tối ưu hóa cho những công việc huấn luyện như thế này.
+
+Độ sai số có thể có, nhưng bản chất là vẫn không thay đổi sau khoảng vài lượt chạy.
+
+\end{document}

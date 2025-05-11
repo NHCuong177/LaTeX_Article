@@ -1,0 +1,364 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+%==========================================TIÊU ĐỀ TẬP========================================
+\begin{table}[h]
+\begin{adjustwidth}{-1cm}{}
+    \begin{tabular}{>{\centering\arraybackslash}p{6cm}|>{\raggedright\arraybackslash}p{12.5cm}}
+        \multirow{5}{6cm}
+        % Dòng đầu tiên: ÉPISODE và số tập
+        {\\[-40pt]
+        \flaregothic\fontsize{20pt}{20pt}\selectfont \centering 
+        \color{eptype}CHAPTER\color{black}\\
+        \flaregothic\fontsize{72pt}{72pt}\selectfont
+        \color{epnum}2
+        \\[18pt]
+        }
+        & {\vnmsans\fontsize{36pt}{36pt}\selectfont Khái niệm chung}\\[8pt]
+        \color{black}
+        & Trong chương này, ta sẽ tìm hiểu các nội dung chính sau:
+        \begin{itemize}
+            \item CIFAR-10 là gì?
+            \item Mạng CNN là gì?
+            \item Mạng đầy đủ là gì?
+            \item Mạng ResNet là gì?
+            \item PyTorch là gì?
+        \end{itemize}
+        \\[-20pt]
+        \end{tabular}
+\end{adjustwidth}
+\end{table}
+%=========================================TRUYỆN CHÍNH========================================
+
+\subsection*{1. CIFAR-10 là gì?}
+\addcontentsline{toc}{subsection}{CIFAR-10 là gì?} 
+
+Tập dữ liệu CIFAR-10 (viết tắt của Canadian Institute For Advanced Research) là tập hợp các hình ảnh được sử dụng rộng rãi trong lĩnh vực học máy và thuật toán thị giác máy tính. Đây là một trong những bộ dữ liệu được sử dụng rộng rãi nhất cho nghiên cứu học máy. 
+
+Tập này bao gồm 60.000 ảnh màu, kích cỡ 32x32, được chia đều cho 10 lớp, tương ứng với 10 nhãn khác nhau, đó là: 
+
+\begin{multicols}{2}
+    \begin{itemize}
+        \item Máy bay (airplane)
+        \item Ô tô (automobile)
+        \item Chim (bird)
+        \item Mèo (cat)
+        \item Hươu (deer)
+        \item Chó (Dog)
+        \item Ếch (frog)
+        \item Ngựa (horse)
+        \item Tàu thủy (ship)
+        \item Xe tải (truck)
+    \end{itemize}
+\end{multicols}
+
+\img{1-1}
+
+Trong mỗi nhãn lại được chia thành hai tập con: 5000 bức được dùng với mục đích huấn luyện (training), và 1000 bức còn lại sẽ dược dùng để thử nghiệm (testing).
+
+Tập dữ liệu này dược sử dụng rộng rãi trong lĩnh vực thị giác máy tính nhằm để đào tạo và đánh giá các mô hình học sâu (deep learning) trong tác vụ phân loại nhãn, chẳng hạn như CNN (mạng nơ-ron tích chập) hay SVM. Sự đa dạng của bộ dữ liệu về mặt lớp và sự hiện diện của hình ảnh màu làm cho nó trở thành một bộ dữ liệu toàn diện cho nghiên cứu và phát triển trong lĩnh vực học máy và thị giác máy tính.
+\\[-20pt]
+\subsection*{2. Mạng CNN là gì?}
+\addcontentsline{toc}{subsection}{Mạng CNN là gì?}
+
+Mạng nơ-ron tích chập (Convolutional Neural Network, viết tắt là CNN) là một loại mạng nơ-ron nhân tạo được sử dụng rộng rãi trong nhận dạng và phân loại hình ảnh/đối tượng. Nói cách khác, các mô hình học sâu nhận dạng các đối tượng trong hình ảnh bằng cách sử dụng CNN.
+
+NN đóng vai trò quan trọng trong các tác vụ/chức năng đa dạng như:
+
+\begin{itemize}
+    \item Xử lý hình ảnh: phát hiện biên, làm sắc nét, khử nhiễu\dots
+    \item Thị giác máy tính: định vị (xác định vị trí đối tượng trong ảnh), phân đoạn (chia ảnh thành các vùng chứa các đối tượng khác nhau)
+    \item Phân tích video: nhận dạng hành động, theo dõi đối tượng\dots
+    \item Nhận dạng chướng ngại vật trong xe tự lái
+    \item Nhận dạng giọng nói trong xử lý ngôn ngữ tự nhiên
+\end{itemize}
+
+Mạng nơ-ron tích chập cho phép các mạng sâu học các hàm trên dữ liệu không gian có cấu trúc như hình ảnh, video và văn bản. Về mặt toán học, mạng tích chập cung cấp các công cụ để khai thác cấu trúc cục bộ của dữ liệu một cách hiệu quả. Hình ảnh thỏa mãn các đặc tính thống kê tự nhiên nhất định. Giả sử chúng ta biểu diễn một hình ảnh dưới dạng lưới pixel hai chiều. Các phần của hình ảnh gần nhau trong lưới pixel có khả năng thay đổi cùng nhau (ví dụ: tất cả các pixel tương ứng với một cái bàn trong hình ảnh có thể có màu nâu). Mạng tích chập học cách khai thác cấu trúc hiệp phương sai tự nhiên này để học một cách hiệu quả.
+
+Mạng tích chập là một phát minh tương đối lâu đời. Các phiên bản của mạng tích chập đã được đề xuất trong các tài liệu từ những năm 1980. Mặc dù thiết kế của các mạng tích chập cũ này thường khá hợp lý, nhưng chúng yêu cầu tài nguyên vượt quá phần cứng có sẵn vào thời điểm đó. Kết quả là, mạng tích chập đã bị lãng quên trong các tài liệu nghiên cứu.
+
+Xu hướng này đã đảo ngược đáng kể sau thử thách ILSVRC 2012 về phát hiện đối tượng trong hình ảnh, trong đó AlexNet tích chập đã đạt được tỷ lệ lỗi bằng một nửa so với các đối thủ gần nhất. AlexNet đã có thể sử dụng GPU để huấn luyện các kiến trúc tích chập cũ trên các tập dữ liệu lớn hơn đáng kể. Sự kết hợp giữa kiến trúc cũ và phần cứng mới này đã cho phép AlexNet vượt trội hơn hẳn so với các kỹ thuật hiện đại trong phát hiện đối tượng hình ảnh. Xu hướng này vẫn tiếp tục, với việc mạng nơ-ron tích chập đạt được những bước tiến vượt bậc so với các công nghệ khác để xử lý hình ảnh. Không ngoa khi nói rằng gần như tất cả các quy trình xử lý hình ảnh hiện đại hiện nay đều được hỗ trợ bởi mạng nơ-ron tích chập.
+
+Cũng có một sự phục hưng trong thiết kế mạng tích chập đã đưa mạng tích chập vượt xa các mô hình cơ bản từ những năm 1980. Đầu tiên, các mạng đã trở nên sâu hơn nhiều với các mạng hiện đại mạnh mẽ đạt đến độ sâu hàng trăm lớp. Một xu hướng rộng lớn khác là hướng tới việc khái quát hóa các kiến trúc tích chập để hoạt động trên các kiểu dữ liệu mới. Kiến trúc tích chập cũng đang tạo dấu ấn trong lĩnh vực gen, xử lý văn bản và thậm chí cả dịch thuật ngôn ngữ.
+
+Một mạng nơ-ron tích chập bao gồm:
+
+\begin{itemize}
+    \item \textbf{Lớp tích chập (Convolutional layer:)} đây là lớp quan trọng nhất trong CNN, đảm nhiệm vai trò thực hiện các phép tính chính. Những yếu tố quan trọng của lớp này bao gồm stride, padding, filter map, và feature map, với:
+    \begin{itemize}
+        \item Filter map: Đây là các bộ lọc được áp dụng lên từng vùng của hình ảnh. Mỗi filter map là một ma trận 3 chiều chứa các tham số được biểu diễn dưới dạng số.
+        \item Stride: Đây là bước dịch chuyển của filter map trên hình ảnh, dịch từ trái sang phải theo từng pixel dựa trên giá trị đã xác định.
+        \item Padding (hay đệm): các giá trị 0 sẽ được thêm vào lớp input ở viền ảnh để giữ kích thước của ảnh không bị thay đổi.
+        \item  Feature Map: Sau mỗi lần filter map quét qua input, một quá trình tính toán diễn ra. Và feature map chính là kết quả của quá trình này. Nó thể hiện các đặc trưng đã được trích xuất từ hình ảnh ban đầu.
+    \end{itemize}
+    \img{1-2}
+    \item \textbf{Lớp ReLU (lớp kích hoạt):} đóng vai trò quan trọng trong mạng nơ-ron nhân tạo. Nó mô phỏng hoạt động của các neuron thần kinh bằng cách truyền tín hiệu qua axon (tức là sợi trục trong mạng thần kinh).
+    \item \textbf{Lớp pooling:} giảm kích thước đầu vào khi dữ liệu quá lớn. Nó được đặt giữa các lớp tích chập để giảm số lượng tham số cần tính toán. Thông thường, người ta sẽ dùng loại max pooling để giảm tải cho mô hình một cách hiệu quả nhất.
+    \item \textbf{Lớp fully connected (lớp đầy đủ):} đảm nhiệm vai trò xuất kết quả sau khi ảnh đã được xử lý qua các lớp tích chập và pooling. Khi mô hình đã đọc được thông tin từ ảnh, lớp này tạo ra sự kết nối để sinh ra nhiều output hơn. Lập trình viên sử dụng fully connected layer để tổng hợp và xử lý dữ liệu cuối cùng. Ngoài ra, nếu lớp này nhận dữ liệu về hình ảnh, nó sẽ chuyển thành các mục phân loại nhằm phân tích sâu hơn.
+    \item \textbf{Lóp dropout:} thường được tích hợp vào các kiến trúc CNN hiện đại để cải thiện hiệu suất tổng quát hóa của mô hình. Đây là một kỹ thuật chuẩn hóa để giảm overfitting.
+\end{itemize}
+
+Mỗi lớp tích chập đều có trường tiếp nhận. Khái niệm trường tiếp nhận cục bộ bắt nguồn từ khoa học thần kinh, trong đó trường tiếp nhận của một nơ-ron là phần nhận thức cảm giác của cơ thể ảnh hưởng đến việc kích hoạt nơ-ron. Các nơ-ron có một trường "nhìn" nhất định khi chúng xử lý đầu vào cảm giác mà não nhìn thấy. Trường nhìn này theo truyền thống được gọi là trường tiếp nhận cục bộ. "Trường nhìn" này có thể tương ứng với một mảng da hoặc một đoạn trường thị giác của một người.
+
+Kiến trúc tích chập vay mượn khái niệm thứ hai này với khái niệm tính toán về "trường tiếp nhận cục bộ".Mỗi trường tiếp nhận cục bộ tương ứng với một mảng pixel trong hình ảnh và được xử lý bởi một "nơ-ron" riêng biệt. Những "nơ-ron" này tương tự trực tiếp với những nơ-ron trong các lớp được kết nối đầy đủ. Như với các lớp được kết nối đầy đủ (fully conncected), một phép biến đổi phi tuyến được áp dụng cho dữ liệu đến (bắt nguồn từ mảng hình ảnh tiếp nhận cục bộ).
+
+Một lớp của các "nơ-ron tích chập" như vậy có thể được kết hợp thành một lớp tích chập. Lớp này có thể được xem như một phép biến đổi của một vùng không gian này sang vùng không gian khác. Trong trường hợp hình ảnh, một lô hình ảnh được biến đổi thành một lô khác bởi một lớp tích chập.
+
+Điều đáng nhấn mạnh là trường tiếp nhận cục bộ không phải chỉ giới hạn ở dữ liệu hình ảnh. Ví dụ, trong các kiến trúc tích chập xếp chồng lên nhau, trong đó đầu ra của một lớp tích chập được đưa vào đầu vào của lớp tiếp theo, trường tiếp nhận cục bộ sẽ tương ứng với một "mảng" dữ liệu đặc trưng đã được xử lý.
+
+Ví dụ, ta có cấu trúc của một mạng CNN phân loại ảnh chó/mèo như sau:
+
+\begin{itemize}
+    \item Input: Ảnh 64x64x3.
+    \item Conv2D (32 filters, kernel 3x3) → ReLU. → tích chập
+    \item MaxPooling2D (2x2). → pooling bằng hàm max
+    \item Conv2D (64 filters, kernel 3x3) → ReLU.
+    \item MaxPooling2D (2x2).
+    \item FC (128 neuron) → ReLU.
+    \item Dropout (0.5) → Tắt 50\% neuron.
+    \item FC (2 neuron) → Softmax.
+\end{itemize}
+
+\
+\\[-20pt]
+\subsection*{3. Mạng FCN là gì?}
+\addcontentsline{toc}{subsection}{Mạng FCN là gì?}
+
+Mạng đầy đủ (Fully Connected Network, hay còn gọi là Dense Network) là một kiến trúc mạng nơ-ron cơ bản, trong đó mọi nơ-ron của tầng dưới sẽ được kết nối với mọi nơ-ron ở tầng tiếp theo. Nói một cách đơn giản hơn, FCN là loại mạng nơ-ron chỉ thực hiện bước tích chập (và lấy giảm mẫu - subsampling hoặc lấy nâng mẫu -  upsampling), hay - một CNN mà không có các lớp tích chập hoặc các lớp pooling.
+
+Một mạng FCN sẽ dùng với mục đích phân đoạn ảnh thay vì là phân loại, khi nó tạo ra bản đồ phân đoạn tương ứng có cùng độ phân giải với hình ảnh đầu vào.
+
+Các nút trong mạng kết nối đầy đủ thường được gọi là "nơ-ron". Do đó, ở những nơi khác trong các tài liệu, mạng kết nối đầy đủ thường được gọi là "mạng nơ-ron". Cách gọi này phần lớn là do sự ngẫu nhiên trong lịch sử.
+
+Vào những năm 1940, Warren S. McCulloch và Walter Pitts đã công bố mô hình toán học đầu tiên về não, cho rằng các nơ-ron có khả năng tính toán các hàm tùy ý trên các đại lượng Boolean. Những người kế thừa công trình này đã tinh chỉnh mô hình logic này bằng cách biến các "nơ-ron" toán học thành các hàm liên tục biến thiên từ 0 đến 1. Nếu đầu vào của các hàm này đủ lớn, nơ-ron sẽ "kích hoạt" (nhận giá trị 1), nếu không thì sẽ ở trạng thái nghỉ. Với việc bổ sung các trọng số có thể điều chỉnh, mô tả này khớp với các phương trình trước đó.
+
+Nơ-ron thực sự là một cỗ máy cực kỳ phức tạp, với hơn 100 nghìn tỷ nguyên tử và hàng chục nghìn protein tín hiệu khác nhau có khả năng phản ứng với các tín hiệu khác nhau. Bộ vi xử lý là một phép so sánh tốt hơn cho một nơ-ron so với một phương trình một dòng.
+
+Theo nhiều cách, sự khác biệt này giữa nơ-ron sinh học và nơ-ron nhân tạo là điều khá đáng tiếc. Các chuyên gia không chuyên đọc những thông cáo báo chí phóng đại tuyên bố rằng các mạng nơ-ron nhân tạo với hàng tỷ "nơ-ron" đã được tạo ra (trong khi não chỉ có 100 tỷ nơ-ron sinh học) và tin rằng các nhà khoa học sắp tạo ra trí thông minh ở cấp độ con người. Không cần phải nói, trình độ hiện tại của học sâu còn cách xa hàng thập kỷ (hoặc hàng thế kỷ) mới đạt được thành tựu như vậy.
+
+Khi ta tìm hiểu thêm về học sâu, ta có thể bắt gặp những tuyên bố cường điệu về trí tuệ nhân tạo. Đừng ngại gọi ra những tuyên bố này. Học sâu ở dạng hiện tại là một tập hợp các kỹ thuật để giải quyết các bài toán giải tích trên phần cứng nhanh. Nó không phải là tiền thân của Terminator.
+
+FCN có hai thành phần chính: phần mã hóa (encoder) và phần giải mã (decoder).
+
+Phần mã hóa: Bao gồm một loạt các lớp tích chập và lớp gộp (pooling) được sử dụng để trích xuất các đặc trưng từ ảnh đầu vào và giảm độ phân giải không gian của nó.
+Phần giải mã: Bao gồm một loạt các lớp nâng mẫu (upsampling) được sử dụng để tăng độ phân giải không gian của các dự đoán được tạo ra bởi mạng.
+
+Mỗi lớp tích chập trong FCN thực hiện nhiều phép tích chập trên ảnh đầu vào, sử dụng các bộ lọc khác nhau để phát hiện các đặc trưng khác nhau của dữ liệu. Sự kết hợp của nhiều phép tích chập cho phép mạng học các đặc trưng ngày càng phức tạp của dữ liệu đầu vào. Khi mạng đã học được cách phát hiện các mẫu cục bộ này, các bản đồ đặc trưng được tạo ra bởi các lớp tích chập sau đó được nâng mẫu để tạo ra một bản đồ phân đoạn dày đặc cho toàn bộ ảnh đầu vào.
+
+\img{1-3}
+
+Việc nâng mẫu từ các bản đồ đặc trưng lên bản đồ phân đoạn được thực hiện bằng cách thêm phần đệm zero (zero-padding) và sau đó sử dụng các phép tích chập chuyển vị (transposed convolution). Zero-padding bao gồm việc thêm các hàng và cột zero bổ sung vào các bản đồ đặc trưng được tạo ra bởi các lớp tích chập. Điều này cho phép mạng duy trì kích thước không gian của các bản đồ đặc trưng. Tích chập chuyển vị tương tự như tích chập thông thường, nhưng thay vì trượt các bộ lọc trên dữ liệu đầu vào, nó trượt dữ liệu đầu vào trên các bộ lọc, do đó làm tăng độ phân giải không gian của các bản đồ đặc trưng.
+
+Trong FCN, quá trình nâng mẫu này được lặp lại nhiều lần, cho phép mạng tăng dần độ phân giải của các bản đồ đặc trưng từ các lớp tích chập cấp thấp đến các lớp tích chập cấp cao hơn, dẫn đến một bản đồ phân đoạn dày đặc.
+
+FCN có ba phiên bản: FCN-8s, FCN-16s, và FCN-32s. Sự khác biệt chính giữa chúng nằm ở cách kết hợp skip connections từ các tầng tích chập và độ phân giải của đầu ra.
+
+Ta có bảng so sánh sau:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|>{\centering\arraybackslash}p{0.1\linewidth}|>{\centering\arraybackslash}p{0.2\linewidth}|>{\centering\arraybackslash}p{0.1\linewidth}|>{\centering\arraybackslash}p{0.15\linewidth}|>{\centering\arraybackslash}p{0.30\linewidth}|}
+\hline
+\textbf{Phiên bản} & \textbf{Skip Connections} & \textbf{Stride} & \textbf{Độ chi tiết} & \textbf{Phù hợp cho} \\ \hline
+\textbf{FCN-32s} & Không & 32 & Thấp & Ứng dụng đơn giản \\ \hline
+\textbf{FCN-16s} & Tầng pool4 & 16 & Trung bình & Cân bằng giữa độ chính xác và tốc độ \\ \hline
+\textbf{FCN-8s} & Tầng pool4 + pool3 & 8 & Cao & Ứng dụng yêu cầu độ chi tiết cao \\ \hline
+\end{tabular}
+\caption{Các phiên bản của FCN và đặc điểm của chúng}
+\end{table}
+
+\img{1-4}
+
+Ví dụ, ta có cấu trúc của một mạng FCN phân loại 3 loại hoa (Iris dataset) dựa trên 4 đặc trưng: chiều dài/cánh hoa, chiều rộng đài hoa/cánh hoa:
+
+\begin{itemize}
+    \item Input: Ảnh 64x64x3 (4 đặc trưng)
+    \item Kích hoạt ReLU với 8 neuron
+    \item Dropout (0.3)
+    \item Kích hoạt ReLU với 4 neuron
+    \item Dropout (0.2)
+    \item Output: 3 neuron và softmax
+\end{itemize}
+
+với softmax được tính bằng công thức \[\sigma(z_1) = \frac{e^z_i}{\sum^K_{j=1}e^{z_j}}\]
+trong đó:
+\begin{itemize}
+    \item \(e^{z_i}\) là hàm mũ của giá trị đầu vào của \(z_i\)
+    \item \(\sum^K_{j=1}e^{z_j}\) là tổng hàm mũ của tất cả logit
+    \item Kết quả \(\sigma(z_i)\) là xác suất thuộc lớp i, đảm bảo \(\sum^K_{i=1}e^{z_i} = 1\)
+\end{itemize}
+\
+\\[-20pt]
+\subsection*{4. Mạng ResNet là gì?}
+\addcontentsline{toc}{subsection}{Mạng ResNet là gì?}
+
+\subsubsection*{Khái niệm}
+\addcontentsline{toc}{subsubsection}{Khái niệm}
+
+Mạng nơ-ron tích chập sâu đã dẫn đến một loạt các đột phá cho phân loại hình ảnh. Các mạng sâu tự nhiên tích hợp các đặc trưng cấp thấp/trung bình/cao và các bộ phân loại theo kiểu đa lớp đầu cuối, và "các cấp độ" của các đặc trưng có thể được làm phong phú thêm bởi số lượng lớp xếp chồng lên nhau (độ sâu). Bằng chứng gần đây tiết lộ rằng độ sâu của mạng là rất quan trọng, và các kết quả hàng đầu trên tập dữ liệu ImageNet\footnote{Một bộ dữ liệu hình ảnh quy mô lớn, bao gồm hơn 14 triệu hình ảnh được gán nhãn, thuộc hơn 20.000 danh mục khác nhau. Nó được sử dụng rộng rãi làm tiêu chuẩn để huấn luyện và đánh giá các mô hình học sâu, đặc biệt là trong các nhiệm vụ phân loại và phát hiện đối tượng.} đầy thách thức đều khai thác các mô hình "rất sâu", với độ sâu từ mười sáu đến ba mươi. Nhiều nhiệm vụ nhận dạng thị giác quan trọng khác cũng được hưởng lợi rất nhiều từ các mô hình rất sâu.
+
+Được thúc đẩy bởi tầm quan trọng của độ sâu, một câu hỏi được đặt ra: Việc học các mạng tốt hơn có dễ dàng như việc xếp chồng nhiều lớp hơn không? Một trở ngại để trả lời câu hỏi này là vấn đề khét tiếng về gradient biến mất/bùng nổ, cản trở sự hội tụ ngay từ đầu. Tuy nhiên, vấn đề này phần lớn đã được giải quyết bằng cách khởi tạo chuẩn hóa và các lớp chuẩn hóa trung gian, cho phép các mạng có hàng chục lớp bắt đầu hội tụ cho phép hạ gradient ngẫu nhiên (SGD) với lan truyền ngược.
+
+Khi các mạng sâu hơn có thể bắt đầu hội tụ, một vấn đề suy giảm đã được phơi bày: khi độ sâu của mạng tăng lên, độ chính xác đạt đến mức bão hòa (điều này có thể không đáng ngạc nhiên) và sau đó giảm nhanh chóng. Thật bất ngờ, sự suy giảm như vậy không phải do quá khớp (overfitting), và việc thêm nhiều lớp vào một mô hình đủ sâu sẽ dẫn đến lỗi huấn luyện cao hơn, như được báo cáo trong và được xác minh kỹ lưỡng bằng các thí nghiệm của ta.
+
+Sự suy giảm (của độ chính xác huấn luyện) cho thấy rằng không phải tất cả các hệ thống đều dễ dàng tối ưu hóa như nhau. Hãy xem xét một kiến trúc nông hơn và kiến trúc sâu hơn tương ứng của nó, kiến trúc này thêm nhiều lớp vào nó. Tồn tại một giải pháp bằng cách xây dựng cho mô hình sâu hơn: các lớp được thêm vào là ánh xạ nhận dạng và các lớp khác được sao chép từ mô hình nông hơn đã học. Sự tồn tại của giải pháp được xây dựng này chỉ ra rằng một mô hình sâu hơn sẽ không tạo ra lỗi huấn luyện cao hơn so với mô hình nông hơn tương ứng của nó. Nhưng các thí nghiệm cho thấy rằng các bộ giải hiện tại của ta không thể tìm ra các giải pháp tốt hoặc tốt hơn so với giải pháp được xây dựng (hoặc không thể làm như vậy trong thời gian khả thi).
+
+Vậy, mạng nơ-ron dư thừa là gì?
+
+Mạng nơ-ron dư thừa (Residual Network, viết tắt là ResNet) là kiến trúc mạng neuron tích chập (CNN) được Microsoft Research giới thiệu năm 2015, nổi tiếng với việc giải quyết vấn đề ``degradation'' (suy giảm độ chính xác khi mạng quá sâu). 
+
+Thay vì hy vọng mỗi vài lớp xếp chồng lên nhau trực tiếp phù hợp với một ánh xạ cơ bản mong muốn, ta rõ ràng để các lớp này phù hợp với một ánh xạ dư. Chính thức, biểu thị ánh xạ cơ bản mong muốn là H(x), ta để các lớp phi tuyến xếp chồng lên nhau phù hợp với một ánh xạ khác của \(F(x) := H(x)-x\). Ánh xạ ban đầu được chuyển thành \(F(x)+x\). Ta đưa ra giả thuyết rằng việc tối ưu hóa ánh xạ dư dễ dàng hơn so với việc tối ưu hóa ánh xạ ban đầu, không được tham chiếu. Đến cùng cực, nếu một ánh xạ nhận dạng là tối ưu, thì việc đẩy phần dư về 0 sẽ dễ dàng hơn là khớp với một ánh xạ nhận dạng bằng một chồng các lớp phi tuyến.
+
+Công thức của \(F(x)+x\) có thể được thực hiện bằng các mạng nơ-ron truyền thẳng với "kết nối tắt". Kết nối tắt là những kết nối bỏ qua một hoặc nhiều lớp. Trong trường hợp của ta, các kết nối tắt chỉ đơn giản thực hiện ánh xạ nhận dạng và đầu ra của chúng được thêm vào đầu ra của các lớp xếp chồng lên nhau. Kết nối tắt nhận dạng không thêm tham số bổ sung cũng như độ phức tạp tính toán. Toàn bộ mạng vẫn có thể được huấn luyện đầu cuối bằng SGD với lan truyền ngược và có thể dễ dàng triển khai bằng cách sử dụng các thư viện phổ biến (ví dụ: Caffe) mà không cần sửa đổi các bộ giải.
+
+Ta trình bày các thí nghiệm toàn diện trên ImageNet để chỉ ra vấn đề suy giảm và đánh giá phương pháp của ta. Từ đó, ta chỉ ra rằng: 
+\begin{enumerate}
+    \item Mạng dư cực kỳ sâu của ta rất dễ tối ưu hóa, nhưng các mạng "thông thường" tương ứng (chỉ đơn giản là xếp chồng các lớp) biểu hiện lỗi huấn luyện cao hơn khi độ sâu tăng lên;
+    \item Mạng dư sâu của ta có thể dễ dàng tận hưởng lợi ích về độ chính xác từ độ sâu tăng lên đáng kể, tạo ra kết quả tốt hơn đáng kể so với các mạng trước đó.
+\end{enumerate}
+
+Các hiện tượng tương tự cũng được thể hiện trên tập CIFAR-10, cho thấy rằng các khó khăn về tối ưu hóa và hiệu quả của phương pháp của ta không chỉ giống với một tập dữ liệu cụ thể. Ta trình bày các mô hình được huấn luyện thành công trên tập dữ liệu này với hơn 100 lớp và khám phá các mô hình với hơn 1000 lớp.
+
+Trên tập dữ liệu phân loại ImageNet, ta thu được kết quả tuyệt vời bằng các mạng dư cực kỳ sâu. Mạng dư 152 lớp của ta là mạng sâu nhất từng được trình bày trên ImageNet, trong khi vẫn có độ phức tạp thấp hơn so với mạng VGG. Kết hợp của ta có lỗi top-5 là 3,57\% trên tập kiểm tra ImageNet và giành được vị trí thứ nhất trong cuộc thi phân loại ILSVRC 2015. Các biểu diễn cực kỳ sâu cũng có hiệu suất khái quát tuyệt vời trên các nhiệm vụ nhận dạng khác và giúp ta tiếp tục giành được vị trí thứ nhất trên: Phát hiện ImageNet, Định vị ImageNet, Phát hiện COCO và Phân đoạn COCO trong các cuộc thi ILSVRC \& COCO 2015. Bằng chứng mạnh mẽ này cho thấy rằng nguyên tắc học tập dư là chung chung và ta hy vọng rằng nó có thể áp dụng trong các vấn đề thị giác và phi thị giác khác.
+
+Để giải quyết vấn đề triệt tiêu/bùng nổ gradient, kiến trúc này đã giới thiệu khái niệm gọi là Khối Phần dư (Residual Block). Trong mạng này, chúng ta sử dụng một kỹ thuật gọi là kết nối bỏ qua (skip connection). Kết nối bỏ qua kết nối các kích hoạt của một lớp với các lớp tiếp theo bằng cách bỏ qua một số lớp ở giữa. Điều này tạo thành một khối phần dư. ResNet được tạo ra bằng cách xếp chồng các khối phần dư này lên nhau.
+
+Cách tiếp cận đằng sau mạng này là thay vì các lớp học ánh xạ cơ bản, chúng ta cho phép mạng khớp với ánh xạ phần dư. Vì vậy, thay vì nói \(H(x)\), ánh xạ ban đầu, hãy để mạng khớp với \(F(x) = H(x) - x\) là ``phần dư'', thường nhỏ hơn và dễ học hơn.
+
+Mạng kết hợp phần dư F(x) này với đầu vào x bằng cách sử dụng kết nối tắt hoặc kết nối bỏ qua (skip connection): \(H(x) = F(x) + x\).
+
+\img{1-5}
+
+\newpage
+
+\subsubsection*{Kiến trúc}
+\addcontentsline{toc}{subsubsection}{Kiến trúc}
+
+Kiến trúc mạng ResNet thường được ứng dụng cho các lĩnh vực thuộc thị giác máy tính, như phân loại ảnh hay làm backbone (mạng trích xuất đặc trưng) trong các mô hình phức tạp.
+
+Về cơ bản, khi ta làm việc trên ImageNet (hay CIFAR-10), thì sẽ có hai loại mạng như sau:
+
+\begin{wrapfigure}{l}{8.5cm}
+    \includegraphics[width=8.5cm]{Image/1-6.png}
+\end{wrapfigure}
+
+- Mạng thông thường (Plain Network). Các mạng cơ sở thông thường của ta chủ yếu được lấy cảm hứng từ triết lý của mạng VGG . Các lớp tích chập hầu hết có bộ lọc 3x3 và tuân theo hai quy tắc thiết kế đơn giản: (i) đối với cùng kích thước bản đồ đặc trưng đầu ra, các lớp có cùng số lượng bộ lọc; và (ii) nếu kích thước bản đồ đặc trưng giảm đi một nửa, số lượng bộ lọc được tăng gấp đôi để duy trì độ phức tạp thời gian cho mỗi lớp. Chúng tôi thực hiện downsampling trực tiếp bằng các lớp tích chập có bước nhảy là 2. Mạng kết thúc bằng một lớp gộp trung bình toàn cục (global average pooling) và một lớp kết nối đầy đủ 1000 chiều với softmax. Tổng số lớp có trọng số là 34.
+
+Điều đáng chú ý là mô hình của ta có ít bộ lọc hơn và độ phức tạp thấp hơn so với mạng VGG (Hình 3, trái). Mạng cơ sở 34 lớp của ta có 3,6 tỷ FLOPs (phép nhân-cộng), chỉ bằng 18\% của VGG-19 (19,6 tỷ FLOPs).
+
+- Mạng dư (Residual Network). Dựa trên mạng thông thường ở trên, ta chèn các kết nối tắt (Hình 3, phải) biến mạng thành phiên bản dư tương ứng của nó. Các kết nối tắt nhận dạng (Công thức (1)) có thể được sử dụng trực tiếp khi đầu vào và đầu ra có cùng kích thước (kết nối tắt đường liền nét trong Hình 3). Khi kích thước tăng (kết nối tắt đường chấm chấm trong Hình 3), ta xem xét hai tùy chọn: (A) Kết nối tắt vẫn thực hiện ánh xạ nhận dạng, với các mục nhập bằng 0 bổ sung được đệm cho kích thước tăng. Tùy chọn này không giới thiệu thêm tham số; (B) Kết nối tắt chiếu  trong Công thức (2) được sử dụng để khớp kích thước (thực hiện bằng tích chập 1x1). Đối với cả hai tùy chọn, khi các kết nối tắt đi qua các bản đồ đặc trưng có hai kích thước, chúng được thực hiện với bước nhảy là 2.
+
+ResNet có phiên bản khác nhau, thể hiện độ sâu của mạng - tức là số lớp của mạng:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|>{\centering\arraybackslash}p{0.15\linewidth}|>{\centering\arraybackslash}p{0.10\linewidth}|>{\centering\arraybackslash}p{0.20\linewidth}|>{\centering\arraybackslash}p{0.35\linewidth}|}
+\hline
+\textbf{Tên mô hình} & \textbf{Số lớp} & \textbf{Cấu trúc khối} & \textbf{Đặc điểm} \\ \hline
+ResNet-18 & 18 & Basic Block (2 lớp conv) & Nhẹ, phù hợp cho thiết bị tính toán yếu. \\ \hline
+ResNet-34 & 34 & Basic Block & Cân bằng giữa độ sâu và hiệu suất. \\ \hline
+ResNet-50 & 50 & Bottleneck Block (3 lớp conv) & Tối ưu hóa tham số, hiệu suất cao. \\ \hline
+ResNet-101 & 101 & Bottleneck Block & Sâu hơn, dùng cho bài toán phức tạp. \\ \hline
+ResNet-152 & 152 & Bottleneck Block & Độ sâu cực đại, độ chính xác cao. \\ \hline
+\end{tabular}
+\caption{Các phiên bản của ResNet và đặc điểm của chúng}
+\end{table}
+
+ResNet gần như tương tự với các mạng gồm có convolution, pooling, activation và fully-connected, đồng thời có thêm một khối dư được sử dụng trong mạng. Xuất hiện một mũi tên cong xuất phát từ đầu và kết thúc tại cuối khối dư. Hay nói cách khác là sẽ bổ sung Input X vào đầu ra của lớp, hay chính là phép cộng mà ta thấy trong hình minh họa, việc này sẽ chống lại việc đạo hàm bằng 0, do vẫn còn cộng thêm X. Với H(x) là giá trị dự đoán, F(x) là giá trị thật (nhãn), chúng ta muốn H(x) bằng hoặc xấp xỉ F(x). Việc F(x) có được từ x như sau:
+
+\begin{center}
+    X -> trọng số 1 -> ReLU -> trọng số 2
+\end{center}
+
+Ví dụ, một mạng ResNet-50 cơ bản được xây dựng từ các lớp như sau:
+
+\begin{itemize}
+    \item Zero-padding: Input với (3,3)
+    \item Stage 1: Tích chập (Conv1) với 64 filters với shape(7,7), sử dụng stride (2,2). BatchNorm, MaxPooling (3,3).
+    \item Stage 2: Convolutiontal block sử dụng 3 filter với size 64x64x256, f=3, s=1. Có 2 Identity blocks với filter size 64x64x256, f=3.
+    \item Stage 3: Convolutional sử dụng 3 filter size 128x128x512, f=3,s=2. Có 3 Identity blocks với filter size 128x128x512, f=3.
+    \item Stage 4: Convolutional sử dụng 3 filter size 256x256x1024, f=3,s=2. Có 5 Identity blocks với filter size 256x256x1024, f=3.
+    \item Stage 5: Convolutional sử dụng 3 filter size 512x512x2048, f=3,s=2. Có 2 Identity blocks với filter size 512x512x2048, f=3.
+    \item The 2D Average Pooling : sử dụng với kích thước (2,2).
+    \item The Flatten.
+    \item Fully Connected (Dense) : sử dụng softmax activation.
+\end{itemize}
+
+\subsection*{Ưu-nhược điểm của cả ba mô hình}
+\addcontentsline{toc}{subsection}{Ưu-nhược điểm của cả ba mô hình}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|>{\centering\arraybackslash}p{0.15\linewidth}|>{\centering\arraybackslash}p{0.35\linewidth}|>{\centering\arraybackslash}p{0.35\linewidth}|}
+\hline
+\textbf{Mạng} & \textbf{Ưu điểm} & \textbf{Nhược điểm} \\ \hline
+CNN & 
+\begin{itemize}
+    \item Hiệu quả trong việc học các đặc trưng cục bộ từ ảnh.
+    \item Giảm thiểu số lượng tham số so với mạng fully connected.
+    \item Dễ dàng triển khai và huấn luyện.
+\end{itemize} & 
+\begin{itemize}
+    \item Có thể bị overfitting nếu không sử dụng các kỹ thuật regularization như dropout hoặc data augmentation.
+    \item Khó khăn trong việc xử lý các biến thể của ảnh (xoay, phóng to/thu nhỏ).
+\end{itemize} \\ \hline
+FCN & 
+\begin{itemize}
+    \item Có thể xử lý ảnh với kích thước bất kỳ.
+    \item Giảm số lượng tham số và tránh overfitting.
+    \item Phù hợp cho các bài toán phân đoạn ảnh.
+\end{itemize} & 
+\begin{itemize}
+    \item Độ chính xác có thể thấp hơn so với CNN truyền thống nếu không được điều chỉnh phù hợp.
+    \item Khó khăn trong việc huấn luyện với các bộ dữ liệu lớn.
+\end{itemize} \\ \hline
+ResNet & 
+\begin{itemize}
+    \item Cho phép huấn luyện các mạng rất sâu (hàng trăm tầng) mà không bị mất mát thông tin.
+    \item Đạt độ chính xác cao trên các bộ dữ liệu phức tạp như CIFAR-10 và ImageNet.
+    \item Giải quyết vấn đề gradient biến mất/bùng nổ.
+\end{itemize} & 
+\begin{itemize}
+    \item Yêu cầu tài nguyên tính toán lớn hơn so với CNN và FCN.
+    \item Cấu trúc phức tạp, khó khăn trong việc triển khai và tối ưu hóa.
+\end{itemize} \\ \hline
+\end{tabular}
+\caption{Ưu và nhược điểm của các loại mạng CNN, FCN và ResNet}
+\end{table}
+
+\subsubsection*{Triển khai}
+\addcontentsline{toc}{subsubsection}{Triển khai}
+
+Việc triển khai của chúng tôi cho ImageNet tuân theo thực tiễn. Hình ảnh được thay đổi kích thước với cạnh ngắn hơn của nó được lấy mẫu ngẫu nhiên trong [256; 480] để tăng cường tỷ lệ. Một vùng cắt 224x224 được lấy mẫu ngẫu nhiên từ một hình ảnh hoặc lật ngang của nó, với giá trị trung bình trên mỗi pixel được trừ đi. Phép tăng cường màu sắc tiêu chuẩn được sử dụng. Chúng tôi áp dụng chuẩn hóa hàng loạt (BN) ngay sau mỗi tích chập và trước khi kích hoạt,. Chúng tôi khởi tạo các trọng số và huấn luyện tất cả các mạng thông thường/dư từ đầu. Chúng tôi sử dụng SGD với kích thước mini-batch là 256. Tỷ lệ học tập bắt đầu từ 0,1 và được chia cho 10 khi lỗi đạt đến mức ổn định, và các mô hình được huấn luyện cho tối đa 60-104 lần lặp. Chúng tôi sử dụng weight decay là 0,0001 và momentum là 0,9. Trong việc triển khai này, họ đã không sử dụng lớp dropout.
+
+Trong thử nghiệm, để nghiên cứu so sánh, chúng tôi áp dụng thử nghiệm 10-crop tiêu chuẩn. Để có kết quả tốt nhất, chúng tôi áp dụng dạng tích chập hoàn toàn, và lấy trung bình điểm số ở nhiều tỷ lệ (hình ảnh được thay đổi kích thước sao cho cạnh ngắn hơn nằm trong {224; 256; 384; 480; 640}).
+
+\subsection*{5. PyTorch là gì?}
+\addcontentsline{toc}{subsection}{PyTorch là gì?}
+
+PyTorch là framework được phát triển bởi Meta. Đây là một ông lớn về công nghệ đầu tư rất nhiều nguồn lực cho việc phát triển trí tuệ nhân tạo. PyTorch được phát triển với giấy phép mã nguồn mở do đó nó tạo được cho mình một cộng đồng rất lớn. Một cộng đồng lớn đồng nghĩa với nhiều tài nguyên để học và các vấn đề của ta có thể đã có ai đó giải quyết và chia sẻ với cộng đồng. PyTorch cùng với Tensorflow và Keras là một trong những framework phổ biến được sử dụng trong các bài toán về Deep Learning hiện nay. Đặc biệt, trong các lĩnh vực nghiên cứu, hầu như các tác giả đều sử dụng pytorch để triển khai bài toán của mình. PyTorch cho thấy lợi thế của nó trong lĩnh vực nghiên cứu bởi việc rất dễ dàng để ta debug và visuallize, ngoài ra nó theo cơ chế Dynamic Graphs cho phép giảm thời gian huấn luyện mô hình.
+
+Thư viện PyTorch được phát triển chủ yếu bởi Phòng thí nghiệm Nghiên cứu AI của Facebook (FAIR) và là phần mềm miễn phí và mã nguồn mở với hơn 1.700 người đóng góp. Nó cho phép ta dễ dàng chạy các phép tính dựa trên mảng, xây dựng các mạng nơ-ron động và thực hiện tự động vi phân trong Python với khả năng tăng tốc mạnh mẽ của bộ xử lý đồ họa (GPU) - tất cả những tính năng quan trọng cần thiết cho nghiên cứu học sâu. Mặc dù một số người sử dụng nó để tính toán tensor được tăng tốc, nhưng hầu hết sử dụng nó để phát triển học sâu.
+
+Giao diện đơn giản và linh hoạt của PyTorch cho phép thử nghiệm nhanh chóng. Bạn có thể tải dữ liệu, áp dụng các phép biến đổi và xây dựng các mô hình chỉ với một vài dòng mã. Sau đó, ta có thể linh hoạt viết các vòng lặp huấn luyện, xác thực và kiểm tra tùy chỉnh và triển khai các mô hình đã được huấn luyện một cách dễ dàng.
+
+Nó có một hệ sinh thái mạnh mẽ và một cộng đồng người dùng lớn, bao gồm các trường đại học như Stanford và các công ty như Uber, NVIDIA và Salesforce. Vào năm 2019, PyTorch đã thống trị các báo cáo hội nghị về học máy và học sâu: 69\% báo cáo của Hội nghị về Thị giác Máy tính và Nhận dạng Mẫu (CVPR) đã sử dụng PyTorch, hơn 75\% của cả Hiệp hội Ngôn ngữ Máy tính (ACL) và Chương Bắc Mỹ của ACL (NAACL) đã sử dụng nó, và hơn 50\% của Hội nghị Quốc tế về Biểu diễn Học tập (ICLR) và Hội nghị Quốc tế về Học máy (ICML) cũng sử dụng nó. Ngoài ra còn có hơn 60 nghìn kho lưu trữ trên GitHub liên quan đến PyTorch.
+
+Nhiều nhà phát triển và nhà nghiên cứu sử dụng PyTorch để tăng tốc thử nghiệm và tạo mẫu nghiên cứu học sâu. API Python đơn giản, hỗ trợ GPU và tính linh hoạt của nó làm cho nó trở thành lựa chọn phổ biến giữa các tổ chức nghiên cứu học thuật và thương mại. Kể từ khi được mở nguồn vào năm 2018, PyTorch đã đạt đến bản phát hành ổn định và có thể dễ dàng cài đặt trên các hệ điều hành Windows, Mac và Linux. Framework này tiếp tục mở rộng nhanh chóng và hiện đang tạo điều kiện triển khai đến các môi trường sản xuất trên nền tảng đám mây và thiết bị di động.
+
+Nếu bạn đang nghiên cứu về máy học, tiến hành nghiên cứu học sâu hoặc xây dựng hệ thống AI, bạn có thể sẽ cần sử dụng một khuôn khổ học sâu. Một khuôn khổ học sâu giúp thực hiện dễ dàng các tác vụ phổ biến như tải dữ liệu, xử lý trước, thiết kế mô hình, đào tạo và triển khai. PyTorch đã trở nên rất phổ biến trong cộng đồng học thuật và nghiên cứu do tính đơn giản, linh hoạt và giao diện Python của nó. Sau đây là một số lý do để tìm hiểu và sử dụng PyTorch:
+\begin{itemize}
+    \item PyTorch rất phổ biến. Nhiều công ty và tổ chức nghiên cứu sử dụng PyTorch làm nền tảng học sâu chính của họ. Trên thực tế, một số công ty đã xây dựng các công cụ học máy tùy chỉnh của họ trên PyTorch. Do đó, các kỹ năng PyTorch rất được săn đón.
+    \item PyTorch được hỗ trợ bởi tất cả các nền tảng đám mây lớn, chẳng hạn như Amazon Web Services (AWS), Google Cloud Platform (GCP), Microsoft Azure và Alibaba Cloud. Bạn có thể khởi động máy ảo với PyTorch được tải sẵn để phát triển dễ dàng. Bạn có thể sử dụng hình ảnh Docker dựng sẵn, thực hiện đào tạo quy mô lớn trên nền tảng GPU đám mây và chạy mô hình ở quy mô sản xuất.
+    \item PyTorch được hỗ trợ bởi Google Colaboratory và Kaggle Kernels. Bạn có thể chạy mã PyTorch trong trình duyệt mà không cần cài đặt hoặc cấu hình. Bạn có thể tham gia các cuộc thi Kaggle bằng cách chạy PyTorch trực tiếp trong kernel của bạn.
+    \item PyTorch đã ``trưởng thành'' (kỹ càng) và ổn định. PyTorch được bảo trì thường xuyên và hiện đã phát hành phiên bản 1.8.
+    \item PyTorch hỗ trợ CPU, GPU, TPU và xử lý song song. Bạn có thể tăng tốc quá trình đào tạo và suy luận của mình bằng GPU và TPU. Các đơn vị xử lý Tensor (TPU) là các chip mạch tích hợp dành riêng cho ứng dụng (ASIC) được tăng tốc bằng AI do Google phát triển để cung cấp giải pháp thay thế cho GPU để tăng tốc phần cứng NN. Với xử lý song song, bạn có thể áp dụng tiền xử lý trên CPU của mình trong khi đào tạo mô hình trên GPU hoặc TPU.
+    \item PyTorch hỗ trợ đào tạo phân tán. Bạn có thể đào tạo mạng nơ-ron trên nhiều GPU trên nhiều máy.
+    \item PyTorch hỗ trợ triển khai vào sản xuất. Với các tính năng TorchScript và TorchServe mới hơn, bạn có thể dễ dàng triển khai các mô hình vào môi trường sản xuất bao gồm cả máy chủ đám mây.
+    \item PyTorch đang bắt đầu hỗ trợ triển khai trên thiết bị di động. Mặc dù hiện tại vẫn đang trong giai đoạn thử nghiệm, nhưng giờ đây bạn có thể triển khai mô hình cho các thiết bị iOS và Android.
+    \item PyTorch có một hệ sinh thái rộng lớn và một bộ thư viện mã nguồn mở. Các thư viện như Torchvision, fastai và PyTorch Lightning mở rộng khả năng và hỗ trợ các lĩnh vực cụ thể như xử lý ngôn ngữ tự nhiên (NLP) và thị giác máy tính.
+    \item PyTorch cũng có giao diện C++. Mặc dù tôi sẽ tập trung vào giao diện Python trong cuốn sách này, PyTorch cũng hỗ trợ giao diện C++ frontend. Nếu bạn cần xây dựng các ứng dụng hiệu suất cao, độ trễ thấp hoặc bare-metal, bạn có thể viết chúng bằng C++ bằng cách sử dụng cùng thiết kế và kiến ​​trúc như Python API.
+    \item PyTorch hỗ trợ định dạng Open Neural Network Exchange (ONNX) một cách tự nhiên. Bạn có thể dễ dàng xuất mô hình của mình sang định dạng ONNX và sử dụng chúng với các nền tảng, thời gian chạy hoặc trình trực quan hóa tương thích với ONNX.
+    \item PyTorch có một cộng đồng lớn các nhà phát triển và diễn đàn người dùng. Có hơn 38.000 người dùng trên diễn đàn PyTorch và bạn có thể dễ dàng nhận được sự hỗ trợ hoặc đăng câu hỏi cho cộng đồng bằng cách truy cập Diễn đàn thảo luận PyTorch.
+\end{itemize}
+
+\end{document}

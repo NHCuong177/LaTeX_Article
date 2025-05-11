@@ -1,0 +1,100 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+%==========================================TIÊU ĐỀ TẬP========================================
+\begin{table}[h]
+    \begin{adjustwidth}{-1cm}{}
+        \begin{tabular}{>{\centering\arraybackslash}p{6cm}|>{\raggedright\arraybackslash}p{12.5cm}}
+            \multirow{5}{6cm}
+            % Dòng đầu tiên: ÉPISODE và số tập
+            {\\[-40pt]
+            \flaregothic\fontsize{20pt}{20pt}\selectfont \centering 
+            \color{eptype}CHAPTER\color{black}\\
+            \flaregothic\fontsize{72pt}{72pt}\selectfont
+            \color{epnum}1
+            \\[18pt]
+            }
+            & {\vnmsans\fontsize{36pt}{36pt}\selectfont Đôi nét về phân loại ảnh}\\[8pt]
+            \color{black}
+            & Trong chương này, ta sẽ tìm hiểu các nội dung chính sau:
+            \begin{itemize}
+                \item Phân loại ảnh là gì?
+                \item Mục đích và ý nghĩa của phân loại ảnh là gì?
+                \item Ứng dụng của phân loại ảnh?
+            \end{itemize}
+            \\[-20pt]
+            \end{tabular}
+    \end{adjustwidth}
+    \end{table}
+%=========================================TRUYỆN CHÍNH========================================
+Phân loại ảnh là một trong những bài toán cơ bản và quan trọng trong lĩnh vực thị giác máy tính (Computer Vision). Bài toán này đòi hỏi mô hình học sâu phải học cách nhận diện và phân loại các đối tượng trong ảnh vào các lớp cụ thể. Tập dữ liệu CIFAR-10 là một bộ dữ liệu phổ biến để đánh giá hiệu quả của các mô hình phân loại ảnh, bao gồm 60,000 ảnh màu kích thước 32x32 pixels, được chia thành 10 lớp khác nhau như máy bay, ô tô, chim, mèo, hươu, chó, ếch, ngựa, tàu thủy và xe tải.
+
+Trong bài tập lớn này, ta sẽ tập trung vào việc xây dựng và đánh giá ba kiến trúc mạng neural phổ biến: Convolutional Neural Network (CNN), Fully Convolutional Network (FCN), và Residual Network (ResNet) để giải quyết bài toán phân loại ảnh trên tập dữ liệu CIFAR-10. Các mô hình này được triển khai bằng PyTorch, một thư viện học sâu mạnh mẽ và linh hoạt, hỗ trợ tính toán tensor và xây dựng mạng nơ-ron một cách dễ dàng.
+
+\subsection*{1. Khái niệm}
+\addcontentsline{toc}{subsection}{Khái niệm phân loại ảnh}
+
+Phân loại ảnh là một quá trình nhận dạng hoặc xác định một cái gì đó từ một hình ảnh. Nói một cách đơn giản, đó là khả năng của phần mềm, hoặc chúng ta có thể nói, một chương trình được sử dụng để xác định, phát hiện và phân tích những thứ xung quanh, con người, địa điểm và một số hành động trong phương tiện kỹ thuật số. Nó được sử dụng để phát hiện và lấy thông tin chi tiết hoặc dữ liệu từ hình ảnh mà nó chụp và tự phân tích mà không cần bất kỳ sự giám sát nào của con người.
+
+Có một số kỹ thuật để nhận dạng hình ảnh, chẳng hạn như phương pháp học sâu và học máy. Nhìn chung, vấn đề càng phức tạp thì khả năng bạn muốn tìm hiểu các phương pháp học sâu càng cao. Tuy nhiên, điều này sẽ phụ thuộc vào ứng dụng cụ thể. Mạng nơ-ron tích chập có thể được sử dụng trong các phương pháp học sâu để nhận dạng hình ảnh nhằm tự động trích xuất các đặc điểm có liên quan từ ảnh mẫu và nhận dạng các đặc điểm đó trong ảnh mới.
+
+Có thể lấy ví dụ đơn giản là khi ta yêu cầu bạn phân biệt giữa một con mèo và một con chó. Đối với con người, việc phân biệt chúng dễ như ăn bánh, nhưng đối với máy tính, rất khó để xác định một con mèo và một con chó từ một hình ảnh, mà nó cần trải qua những bước sau:
+
+\begin{itemize}
+    \item Thu thập dữ liệu: Thu thập một lượng lớn hình ảnh của mèo và chó.
+    \item Gán nhãn dữ liệu: Gán nhãn cho từng hình ảnh để biết hình ảnh nào là mèo và hình ảnh nào là chó.
+    \item Huấn luyện mô hình: Sử dụng các thuật toán học máy hoặc học sâu để huấn luyện mô hình phân loại dựa trên dữ liệu đã gán nhãn.
+    \item Kiểm tra và đánh giá: Kiểm tra mô hình với các hình ảnh mới và đánh giá độ chính xác của nó.
+\end{itemize}
+
+Thị giác máy tính là công nghệ cho phép máy móc tự động nhận dạng hình ảnh và cung cấp mô tả chính xác và hiệu quả về chúng. Ngày nay, một lượng lớn dữ liệu ảnh và video được tạo ra hoặc thu được từ điện thoại di động, camera giao thông, hệ thống an ninh và các thiết bị khác có sẵn cho các hệ thống máy tính. Trí tuệ nhân tạo và máy học (AI/ML) được sử dụng trong các ứng dụng thị giác máy tính để xử lý dữ liệu này một cách phù hợp để giám sát, phát hiện, phân loại, nhận dạng đối tượng và nhận dạng khuôn mặt.
+
+\subsection*{2. Mục đích và ý nghĩa}
+\addcontentsline{toc}{subsection}{Mục đích và ý nghĩa}
+
+Với lượng dữ liệu áp đảo, nhiều vấn đề có thể được giải quyết mà không cần đến các thuật toán phức tạp. Một ví dụ trong lĩnh vực văn bản là công cụ "Ý bạn là gì?" của Google, công cụ này sửa lỗi trong các truy vấn tìm kiếm, không phải thông qua phân tích cú pháp phức tạp của truy vấn mà bằng cách ghi nhớ hàng tỷ cặp truy vấn-trả lời và đề xuất cặp gần nhất với truy vấn của người dùng. 
+
+Khi có rất nhiều hình ảnh, các kỹ thuật lập chỉ mục hình ảnh đơn giản có thể được sử dụng để truy xuất các hình ảnh có sự sắp xếp đối tượng tương tự như hình ảnh truy vấn. Nếu chúng ta có một cơ sở dữ liệu đủ lớn thì chúng ta có thể tìm thấy, với xác suất cao, các hình ảnh trực quan gần với hình ảnh truy vấn, chứa các cảnh tương tự với các đối tượng tương tự được sắp xếp trong các cấu hình không gian tương tự. Nếu các hình ảnh trong tập truy xuất được dán nhãn một phần, thì chúng ta có thể lan truyền nhãn sang hình ảnh truy vấn, do đó thực hiện phân loại.
+
+Các phương pháp láng giềng gần nhất đã được sử dụng trong nhiều vấn đề thị giác máy tính, chủ yếu để so khớp điểm quan tâm. Chúng cũng đã được sử dụng để so khớp hình ảnh toàn cục (ví dụ: ước tính tư thế người), nhận dạng ký tự và nhận dạng đối tượng. Một số bài báo gần đây đã sử dụng các tập dữ liệu hình ảnh lớn kết hợp với các phương pháp hoàn toàn phi tham số cho các ứng dụng thị giác máy tính và đồ họa.
+
+Việc tìm kiếm hình ảnh trong các bộ sưu tập lớn là trọng tâm của cộng đồng truy xuất hình ảnh dựa trên nội dung (CBIR). Sự nhấn mạnh của họ vào các tập dữ liệu thực sự lớn có nghĩa là biểu diễn hình ảnh được chọn thường tương đối đơn giản, ví dụ: màu sắc, wavelet hoặc phân đoạn thô. Điều này cho phép truy xuất rất nhanh các hình ảnh tương tự như truy vấn, ví dụ: hệ thống Cortina chứng minh khả năng truy xuất thời gian thực từ bộ sưu tập 10 triệu hình ảnh, sử dụng kết hợp các đặc trưng biểu đồ kết cấu và cạnh. Xem Datta et al. để biết tổng quan về các phương pháp như vậy.
+
+Câu hỏi chính mà chúng tôi giải quyết trong bài báo này là: Tập dữ liệu hình ảnh cần lớn đến mức nào để thực hiện nhận dạng một cách mạnh mẽ bằng các lược đồ láng giềng gần nhất đơn giản? Trên thực tế, không rõ liệu kích thước của tập dữ liệu được yêu cầu có thực tế hay không vì có một số lượng hình ảnh có thể có hiệu quả vô hạn mà hệ thống thị giác có thể đối mặt. Điều mang lại cho chúng ta hy vọng là thế giới trực quan rất đều đặn ở chỗ hình ảnh thế giới thực chỉ chiếm một phần tương đối nhỏ trong không gian của các hình ảnh có thể có.
+
+Nghiên cứu không gian bị chiếm bởi các hình ảnh tự nhiên rất khó do tính chiều cao của hình ảnh. Một cách để đơn giản hóa nhiệm vụ này là giảm độ phân giải của hình ảnh. Khi chúng ta nhìn vào các hình ảnh trong Hình 6, chúng ta có thể nhận ra cảnh và các đối tượng cấu thành của nó. Tuy nhiên, điều thú vị là những hình ảnh này chỉ có pixel màu 32 x 32 (toàn bộ hình ảnh chỉ là một vectơ 3072 chiều với 8 bit trên mỗi chiều), nhưng ở độ phân giải này, hình ảnh dường như đã chứa hầu hết thông tin liên quan cần thiết để hỗ trợ nhận dạng đáng tin cậy.
+
+Một lợi ích quan trọng của việc làm việc với các hình ảnh nhỏ là việc lưu trữ và thao tác các tập dữ liệu lớn hơn nhiều bậc so với những tập dữ liệu thường được sử dụng trong thị giác máy tính trở nên khả thi. Tương ứng, chúng tôi giới thiệu và cung cấp cho các nhà nghiên cứu một tập dữ liệu gồm 79 triệu hình ảnh màu 32 x 32 duy nhất được thu thập từ Internet. Mỗi hình ảnh được dán nhãn lỏng lẻo với một trong 75.062 danh từ tiếng Anh, do đó tập dữ liệu bao gồm một số lượng rất lớn các lớp đối tượng trực quan. Điều này trái ngược với các tập dữ liệu hiện có cung cấp một lựa chọn thưa thớt các lớp đối tượng.
+
+\subsection*{3. Ứng dụng}
+\addcontentsline{toc}{subsection}{Ứng dụng}
+
+a) Xác định tài khoản gian lận
+Kiểm tra hồ sơ mạng xã hội giả là một trong những ứng dụng quan trọng nhất của nhận dạng hình ảnh. Bạn phải biết rằng trong mười năm qua, sự phổ biến của các tài khoản giả đã tăng lên. Ngày nay, mọi người tạo danh tính giả để quảng bá tin tức sai lệch, tham gia vào gian lận trên internet hoặc làm tổn hại đến danh tiếng của những người nổi tiếng. Bạn nên biết rằng các thuật toán nhận dạng hình ảnh có thể bảo vệ bạn khỏi trở thành nạn nhân của gian lận trực tuyến. Để phát hiện xem liệu có ai đó chụp ảnh bạn và sử dụng chúng trên một tài khoản khác hay không, bạn có thể dễ dàng thực hiện tìm kiếm hình ảnh.
+
+b) Hệ thống an ninh và nhận dạng khuôn mặt
+Nhận dạng hình ảnh cũng được coi là quan trọng vì đây là một trong những thành phần quan trọng nhất trong ngành an ninh. Ngày nay, nó được sử dụng trong nhiều hệ thống an ninh khác nhau. Ví dụ phổ biến nhất về nhận dạng hình ảnh là công nghệ nhận dạng khuôn mặt trên điện thoại di động của bạn. Nhận dạng khuôn mặt trên điện thoại di động hiện đang được sử dụng cho mục đích thương mại. Thuật toán nhận dạng hình ảnh có thể giúp các nhà tiếp thị tìm hiểu về danh tính, giới tính và tâm trạng của một người.
+
+c) Tìm kiếm hình ảnh ngược
+Bạn có thể đã nghe nói đến tìm kiếm hình ảnh ngược trên internet. Tìm kiếm ảnh ngược là một chiến lược cho phép bạn tìm kiếm theo hình ảnh miễn phí. Các công nghệ tìm kiếm hình ảnh ngược mới cho phép bạn tìm kiếm một hình ảnh và tìm thông tin hữu ích về hình ảnh đó. Công cụ tìm kiếm hình ảnh sử dụng các thuật toán trí tuệ nhân tạo và các kỹ thuật nhận dạng hình ảnh để phát hiện nội dung hình ảnh và so sánh chúng với hàng tỷ bức ảnh được lưu trữ trên internet. Các thuật toán nhận dạng hình ảnh giúp xác định các bức ảnh tương tự, nguồn gốc của hình ảnh đang được đề cập, thông tin về chủ sở hữu hình ảnh, các trang web sử dụng cùng một hình ảnh, sao chép hình ảnh và các dữ liệu có liên quan khác.
+
+d) Giúp cảnh sát giải quyết các vụ án
+Bạn có thể bị sốc khi biết rằng các cơ quan chính phủ sử dụng công nghệ nhận dạng hình ảnh. Các tổ chức này tìm kiếm ảnh để lấy thông tin về mọi người. Ngày nay, cảnh sát và các tổ chức bí mật khác thường sử dụng công nghệ nhận dạng hình ảnh để xác định danh tính người trong các bản ghi âm hoặc ảnh chụp.
+
+e) Trao quyền cho doanh nghiệp thương mại điện tử
+Ngày nay, nhận dạng hình ảnh thường được sử dụng trong kinh doanh thương mại điện tử. Theo truyền thống, ngành tìm kiếm trực quan đã phát triển đáng kể. Điều này có ý nghĩa quan trọng vì người tiêu dùng ngày nay thích tìm kiếm sản phẩm bằng hình ảnh hơn là bằng từ ngữ.
+
+\subsection*{4. Những thách thức}
+\addcontentsline{toc}{subsection}{Những thách thức}
+
+\begin{itemize}
+    \item Sự lộn xộn: Có thể khó để xác định và định vị chủ đề chính của hình ảnh trên nền bận rộn và lộn xộn với nhiều thứ. Phân đoạn hình ảnh giúp các thuật toán "hiểu" hình ảnh và phân biệt giữa các thứ.
+    \item Sự che khuất: Các thuật toán nhận dạng hình ảnh phụ thuộc vào việc nhìn thấy toàn bộ một vật thể có thể bị nhầm lẫn bởi các vật thể bị che khuất một phần hoặc toàn bộ. Một giải pháp khả thi là phát triển các mô hình thị giác máy tính được cải tiến có khả năng suy ra toàn bộ vật thể từ các góc nhìn một phần.
+    \item Biến thể trong góc nhìn: Việc xác định các đối tượng có thể được xem từ nhiều góc nhìn hoặc góc độ khác nhau có thể là một thách thức. Việc tăng cường dữ liệu trong quá trình đào tạo có thể khiến các thuật toán tiếp xúc với các góc nhìn bổ sung.
+    \item Ánh sáng không đủ: Cách các thuật toán xác định đối tượng trong ảnh có thể bị ảnh hưởng bởi sự thay đổi về độ sáng, bóng tối và vùng tối. Chuẩn hóa hình ảnh có thể hỗ trợ giải quyết vấn đề này.
+    \item Sai lệch trong Bộ dữ liệu: Khi sự đa dạng của thế giới thực không được phản ánh đầy đủ trong dữ liệu được sử dụng để đào tạo mô hình, thì điều này được gọi là sai lệch bộ dữ liệu. Nó xảy ra do các nhóm hoặc phẩm chất cụ thể được thể hiện quá mức hoặc không được thể hiện đầy đủ trong dữ liệu, dẫn đến kết quả kém. Phương án hành động được khuyến nghị để giải quyết vấn đề này và cung cấp hiệu quả hệ thống cần thiết là quản lý bộ dữ liệu cẩn thận.
+    \item Biến thể về quy mô: Khả năng nhận dạng và phân loại đồ vật bị ảnh hưởng bởi sự thay đổi về kích thước của vật phẩm do khoảng cách từ camera đến. Xử lý đa quy mô nâng cao hiệu suất của các thuật toán được sử dụng trong phát hiện vật thể.
+\end{itemize}
+
+Phân loại ảnh từ tập dữ liệu CIFAR-10 là một bài toán thử thách, đòi hỏi các mô hình học sâu phải có khả năng trích xuất đặc trưng hiệu quả và tổng quát hóa tốt. Trong bài tập lớn này, chúng tôi sẽ khám phá và so sánh hiệu suất của ba kiến trúc mạng phổ biến: CNN, FCN và ResNet, sử dụng PyTorch làm công cụ triển khai. Kết quả thu được sẽ giúp hiểu rõ hơn về ưu nhược điểm của từng mô hình và ứng dụng của chúng trong thực tế.
+
+\end{document}
