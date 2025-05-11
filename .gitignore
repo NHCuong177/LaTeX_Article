@@ -1,14 +1,13 @@
 # Editor directories and files
-*.pdf
-*.log
-*.aux
-*.out
-*.fls
-*.toc
-*.synctex(busy)
-*.synctex.gz
-*.fls
-*.fdb_latexmk
-*.mp4
+main.pdf
+main.log
+main.aux
+main.out
+main.fls
+main.toc
+main.synctex(busy)
+main.synctex.gz
+main.fls
+main.fdb_latexmk
 .vscode
 Episode/motif*.tex

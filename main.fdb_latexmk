@@ -1,5 +1,5 @@
 # Fdb version 4
-["lualatex"] 1746929562.17563 "c:/Users/Admin/Documents/LaTeX_Academics/Article/main.tex" "main.pdf" "main" 1746929567.52552 0
+["lualatex"] 1746931007.26507 "c:/Users/Admin/Documents/LaTeX_Academics/LaTeX_Article/main.tex" "main.pdf" "main" 1746931013.3608 0
   "C:/Users/Admin/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1742428943 90661 4770776d47b10ba382f8ebca41b499c0 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/luatex-cache/generic/fonts/otl/0259-lnth-angrybirds-regular.luc" 1734187604 40646 7c03341e81ffce44f211ea6db62787e4 ""
   "C:/Users/Admin/AppData/Local/MiKTeX/luatex-cache/generic/fonts/otl/angrybirds-regular.luc" 1738086779 28779 3fd3c3f2b187ebc017f43690c393eac8 ""
@@ -274,13 +274,14 @@
   "C:/Users/Admin/AppData/Local/Programs/MiKTeX/tex/luatex/luaotfload/luaotfload.lua" 1709104755 13565 50482dad4c221a79dbdbb982122baf8c ""
   "C:/WINDOWS/Fonts/times.ttf" 1711956127 1201620 2a12210681878cc6dd49aade4f814051 ""
   "C:/WINDOWS/Fonts/timesbd.ttf" 1711956159 1180596 d601c602a4a0b9943b9ca26f870af132 ""
-  "Cover.tex" 1746929552 1777 3adf2edf3011680c4482d0f3811820fe ""
+  "Cover.tex" 1746930375 2037 cac7c641332551f82da1de7bb7267fd8 ""
   "Image/logodhxd.png" 1733329207 86755 3a9836162278a049ea40026ad93623db ""
-  "c:/Users/Admin/Documents/LaTeX_Academics/Article/main.tex" 1746929552 11694 1acfa3ab1e8e37d3d6779dd30f382c4b ""
-  "main.aux" 1746929566 628 1ae63b83dc51e963159a11feb57ba58e "lualatex"
-  "main.out" 1746929566 0 d41d8cd98f00b204e9800998ecf8427e "lualatex"
-  "main.tex" 1746929552 11694 1acfa3ab1e8e37d3d6779dd30f382c4b ""
-  "main.toc" 1746929566 0 d41d8cd98f00b204e9800998ecf8427e "lualatex"
+  "c:/Users/Admin/Documents/LaTeX_Academics/LaTeX_Article/main.tex" 1746931000 11275 c144032417b1422e6c3d919ba8d5983b ""
+  "intro.tex" 1746931000 1529 10a962deca6a1df950ac9df159009db2 ""
+  "main.aux" 1746931012 868 b3e44cd9726503a86f5a096e1d7dbe14 "lualatex"
+  "main.out" 1746931012 117 36ca41eeefc0cdfbf44ab24c33e42264 "lualatex"
+  "main.tex" 1746931000 11275 c144032417b1422e6c3d919ba8d5983b ""
+  "main.toc" 1746931012 69 03630ef8e7947493294e3fc3ac5cb728 "lualatex"
   (generated)
   "main.aux"
   "main.log"

@@ -1,5 +1,5 @@
-PWD c:\Users\Admin\Documents\LaTeX_Academics\Article
-INPUT c:\Users\Admin\Documents\LaTeX_Academics\Article\main.tex
+PWD c:\Users\Admin\Documents\LaTeX_Academics\LaTeX_Article
+INPUT c:\Users\Admin\Documents\LaTeX_Academics\LaTeX_Article\main.tex
 OUTPUT main.log
 OUTPUT main.log
 INPUT C:\Users\Admin\AppData\Local\Programs\MiKTeX\tex\latex\latexconfig\lualatexquotejobname.lua
@@ -486,11 +486,11 @@ INPUT .\main.out
 INPUT .\main.out
 INPUT .\main.out
 INPUT .\main.out
+OUTPUT main.pdf
+OUTPUT main.pdf
 INPUT .\main.out
 OUTPUT main.out
 OUTPUT main.out
-OUTPUT main.pdf
-OUTPUT main.pdf
 INPUT .\Cover.tex
 INPUT .\Cover.tex
 INPUT .\Cover.tex
@@ -507,6 +507,10 @@ INPUT .\main.toc
 INPUT .\main.toc
 OUTPUT main.toc
 OUTPUT main.toc
+INPUT .\intro.tex
+INPUT .\intro.tex
+INPUT .\intro.tex
+INPUT .\intro.tex
 INPUT .\main.aux
 INPUT .\main.aux
 INPUT .\main.out
