@@ -253,21 +253,14 @@
 % F. Tabbing
 \newcommand\tabs[1][1cm]{\hspace*{#1}}
 
-\DeclareFixedFootnote{\rep}{Công ty Google, 1600 Amphitheatre Parkway, Mountain View, California 94043, Hoa Kỳ.}
-\DeclareFixedFootnote{\reps}{Trung tâm Kiểm soát và Phòng ngừa dịch bệnh Hoa Kỳ, 1600 Đường Clifton, NE, Atlanta, Georgia 30333, Hoa Kỳ.}
-
 %================ĐẦU TRANG VÀ CHÂN TRANG====================
 \pagestyle{fancy}
 \fancyhead{} 
 % Tên cuốn truyện
-\fancyhead[LO]
+\fancyhead[LO, RE]
 {\vnmsans\fontsize{12pt}{12pt}\selectfont
-\color{vol}{Ứng dụng khai phá dữ liệu}
-\\[-12pt]}                      
-\fancyhead[RE]
-{\vnmsans\fontsize{12pt}{12pt}\selectfont
-\color{vol}{Phát hiện dịch cúm bằng dữ liệu truy vấn}
-\\[-12pt]}                     
+\color{vol}{Xử lý ngôn ngữ tự nhiên}
+\\[-12pt]}                                         
 % Số chương
 % \fancyhead[RO]
 % {\harosbaelz\fontsize{18pt}{18pt}\selectfont
@@ -301,10 +294,10 @@
 }
 %========================================LỜI NÓI ĐẦU==========================================
 \newpage
-% \section*{\phantomsection\label{preface}} 
-% \addcontentsline{toc}{section}{\textbf{Lời nói đầu}} 
-% {\centering\vnmsans\Large\textcolor{vol}{Lời nói đầu}\par}
-% \subfile{intro}
+\section*{\phantomsection\label{preface}} 
+\addcontentsline{toc}{section}{\textbf{Lời nói đầu}} 
+{\centering\vnmsans\Large\textcolor{vol}{Lời nói đầu}\par}
+\subfile{intro}
 
 %========================================PHẦN CHÍNH===========================================
 

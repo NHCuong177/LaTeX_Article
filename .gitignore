@@ -1,0 +1,14 @@
+# Editor directories and files
+*.pdf
+*.log
+*.aux
+*.out
+*.fls
+*.toc
+*.synctex(busy)
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.mp4
+.vscode
+Episode/motif*.tex
