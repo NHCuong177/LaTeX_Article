@@ -21,51 +21,35 @@ Theo đó, thuật toán này gồm input-output như sau:
 Image Captioning (tạo chú thích hình ảnh tự động) có nhiều ứng dụng thiết thực trong đời sống, công nghệ và nghiên cứu, bao gồm:
 
 \begin{enumerate}
-    \item Hỗ trợ người khiếm thị
-    
-    Mô tả hình ảnh tự động giúp người khiếm thị hiểu nội dung ảnh thông qua giọng nói (screen reader).
+    \item \textbf{Hỗ trợ người khiếm thị:} Mô tả hình ảnh tự động giúp người khiếm thị hiểu nội dung ảnh thông qua giọng nói (screen reader).
 
     Ví dụ: Ứng dụng như Seeing AI (Microsoft) sử dụng AI để mô tả cảnh vật, chữ viết, cảm xúc.
 
-    \item Tìm kiếm hình ảnh thông minh
-    
-    Cải thiện kết quả tìm kiếm bằng cách hiểu nội dung ảnh thay vì chỉ dựa vào metadata hoặc tags.
+    \item \textbf{Tìm kiếm hình ảnh thông minh:} Cải thiện kết quả tìm kiếm bằng cách hiểu nội dung ảnh thay vì chỉ dựa vào metadata hoặc tags.
 
     Ví dụ: Google Images sử dụng AI để phân tích và gán nhãn ảnh.
 
-    \item Mạng xã hội \& Nền tảng chia sẻ ảnh
-    
-    Tự động gợi ý chú thích (caption) cho ảnh đăng tải trên Facebook, Instagram.
+    \item \textbf{Mạng xã hội \& Nền tảng chia sẻ ảnh:} Tự động gợi ý chú thích (caption) cho ảnh đăng tải trên Facebook, Instagram.
 
-    Phát hiện nội dung không phù hợp (ảnh bạo lực, ảnh hưởng xấu).
+    Ví dụ: Phát hiện nội dung không phù hợp (ảnh bạo lực, ảnh hưởng xấu).
 
-    \item Y tế \& Chẩn đoán hình ảnh
-    
-    Mô tả tự động kết quả X-quang, MRI, CT scan để hỗ trợ bác sĩ.
+    \item \textbf{Y tế \& Chẩn đoán hình ảnh:} Mô tả tự động kết quả X-quang, MRI, CT scan để hỗ trợ bác sĩ.
 
     Ví dụ: AI mô tả tổn thương trong ảnh y tế.
 
-    \item Giáo dục \& Học tập
-    
-    Tạo mô tả cho hình ảnh trong sách giáo khoa, tài liệu học tập.
+    \item \textbf{Giáo dục \& Học tập:} Tạo mô tả cho hình ảnh trong sách giáo khoa, tài liệu học tập.
 
-    Hỗ trợ học ngoại ngữ (ghép ảnh với từ vựng).
+    Ví dụ: Hỗ trợ học ngoại ngữ (ghép ảnh với từ vựng).
 
-    \item An ninh \& Giám sát
-    
-    Tự động mô tả sự kiện trong camera an ninh (ví dụ: "Người mặc áo đang chạy").
+    \item \textbf{An ninh \& Giám sát:} Tự động mô tả sự kiện trong camera an ninh.
 
-    Phát hiện hành vi đáng ngờ qua phân tích hình ảnh.
+    Ví dụ: Phát hiện hành vi đáng ngờ qua phân tích hình ảnh.
 
-    \item Thương mại điện tử
-    
-    Tự động gán nhãn sản phẩm từ ảnh (ví dụ: "Áo thun màu xanh, chất cotton").
+    \item \textbf{Thương mại điện tử:} Tự động gán nhãn sản phẩm từ ảnh ("Áo thun màu xanh, chất cotton").
 
     Ví dụ: Pinterest sử dụng AI để đề xuất sản phẩm tương tự.
 
-    \item Robot \& Xe tự lái
-    
-    Giúp robot/xe tự lái "hiểu" môi trường xung quanh qua mô tả bằng ngôn ngữ.
+    \item \textbf{Robot \& Xe tự lái:} Giúp robot/xe tự lái "hiểu" môi trường xung quanh qua mô tả bằng ngôn ngữ.
 
     Ví dụ: Tesla sử dụng AI để nhận diện vật thể và cảnh báo nguy hiểm.
 \end{enumerate}
@@ -122,6 +106,52 @@ Trong thế giới hiện tại, có nhiều mô hình Image Captioning được
                 \item Đặc điểm: Huấn luyện trên lượng dữ liệu khổng lồ (hàng tỷ ảnh)
             \end{itemize}
             \end{itemize}
+    \item Ngoài ra còn có các mô hình khác như VinVL (Sử dụng CNN và Transformer), hay CoCa (Contrastive Captioners).
 \end{enumerate}
+
+\subsection*{4. Các kiến thức liên quan}
+\addcontentsline{toc}{subsection}{Các kiến thức liên quan}
+
+\subsubsection*{4.1 CNN}
+\addcontentsline{toc}{subsubsection}{CNN}
+
+CNN (Convolutional Neural Network) là một loại mạng nơ-ron tích chập được sử dụng phổ biến trong xử lý ảnh và nhận dạng hình ảnh. Chúng được thiết kế để trích xuất đặc trưng từ ảnh bằng cách áp dụng các lớp tích chập và các lớp tổng hợp.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Image/CNN.png}
+    \caption{CNN}
+    \label{fig:CNN}
+\end{figure}
+
+\subsubsection*{4.2 RNN}
+\addcontentsline{toc}{subsubsection}{RNN}
+
+RNN (Recurrent Neural Network) là một loại mạng nơ-ron có trạng thái được sử dụng phổ biến trong xử lý ngôn ngữ tự nhiên và xử lý chuỗi thời gian. RNN được thiết kế để xử lý chuỗi dữ liệu có tính tuần tự, trong đó mỗi phần tử của chuỗi được xử lý dựa trên thông tin từ phần tử trước đó.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Image/RNN.png}
+    \caption{RNN}
+    \label{fig:RNN}
+\end{figure}
+
+\subsubsection*{4.3 LSTM}
+
+LSTM (Long Short-Term Memory) là một loại mạng nơ-ron có trạng thái được sử dụng phổ biến trong xử lý ngôn ngữ tự nhiên và xử lý chuỗi thời gian. LSTM được thiết kế để xử lý chuỗi dữ liệu có tính tuần tự, trong đó mỗi phần tử của chuỗi được xử lý dựa trên thông tin từ phần tử trước đó.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Image/lstm.png}
+    \caption{RNN}
+    \label{fig:RNN}
+\end{figure}
+
+Điểm khác biệt giữa LSTM và RNN là LSTM có thể lưu trữ thông tin dài hạn hơn so với RNN thông qua các cổng ghi và đọc. Điều này giúp LSTM có thể xử lý chuỗi dữ liệu có độ dài lớn hơn so với RNN.
+
+\subsubsection*{4.4 Mô hình CLIP}
+\addcontentsline{toc}{subsubsection}{Mô hình CLIP}
+
+CLIP (Contrastive Language-Image Pre-training) là một mô hình học sâu được thiết kế để học cách biểu diễn hình ảnh và văn bản bằng cách so sánh chúng với các cặp ảnh-đoạn văn bản. Mô hình này được huấn luyện trên một tập dữ liệu lớn và được sử dụng để học cách biểu diễn hình ảnh và văn bản trong không gian vector.
 
 \end{document}
