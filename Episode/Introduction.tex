@@ -4,7 +4,89 @@
 \subsection*{1. Giới thiệu đề tài}
 \addcontentsline{toc}{subsection}{\uline{Giới thiệu đề tài}}
 
+Đăng ký học phần là một trong những công việc quan trọng trong cuộc đời mỗi sinh viên, và đôi khi trở thành ``đặc sản'' mỗi kỳ học mới đến. Cùng với sức nóng của sinh viên, ở đằng sau hậu trường, phòng đào tạo cũng luôn có những khó khăn về việc quản lý và phân công thời gian cho các học sinh.
 
-\subsection*{2. Mục tiêu, đối tượng và phạm vi}
-\addcontentsline{toc}{subsection}{\uline{Mục tiêu, đối tượng và phạm vi}}
+Mỗi ngôi trường đều có một cơ chế và yêu cầu riêng cho sinh việc trong việc đăng ký học phần. Không nói ở đâu xa, trường Đại học Xây dựng Hà nội yêu cầu mỗi sinh viên cần đăng ký tối thiểu 15 tín chỉ trong mỗi học kỳ (với 7 kỳ cho cử nhân và 9 kỳ cho kỹ sư), cùng với các quy trình phức tạp bao gồm: xem danh sách môn học, kiểm tra xung đột lịch, và tổng hợp kết quả. 
 
+Để giải quyết những khó khăn này, hiện nay, nhiều trường đại học đã xây dựng các hệ thống quản lý học phần tự động dành cho PC/máy tính, giúp sinh viên dễ dàng đăng ký học phần và theo dõi tiến độ học tập. Tuy nhiên, với sự phổ biến của điện thoại thông minh, việc sử dụng giao diện web trên thiết bị di động gây nhiều bất tiện do thiếu tối ưu hóa.
+
+Nhằm giải quyết những tồn đọng đó, dự án ``\emph{Ứng dụng đăng ký học phần tích hợp thời khóa biểu cho sinh viên}'' được đề xuất phát triển với trường Đại học Xây dựng Hà Nội chính là đối tượng mà nhóm lựa chọn nghiên cứu, tập trung vào các khía cạnh sau:
+
+\begin{itemize}
+    \item Tính tiện dụng: Cho phép sinh viên đăng ký môn học mọi lúc, mọi nơi qua điện thoại.
+    \item Tích hợp thông minh: Tự động hiển thị thời khóa biểu sau đăng ký và cảnh báo xung đột lịch học.
+    \item Tối ưu hóa trải nghiệm: Giao diện được thiết kế riêng cho di động, tốc độ xử lý nhanh.
+\end{itemize}
+
+Ứng dụng này được thiết kế để hỗ trợ sinh viên trong quá trình đăng ký học phần, bao gồm cả lớp học phần chính thức và lớp học phần nguyện vọng. Sinh viên có thể dễ dàng theo dõi danh sách các học phần đã đăng ký trong kỳ hiện tại và tra cứu lịch sử đăng ký của các kỳ học trước.
+
+Để sử dụng ứng dụng, mỗi sinh viên được cấp một tài khoản riêng với tên đăng nhập là mã số sinh viên và mật khẩu mặc định do nhà trường cung cấp. Sau khi xác thực thành công, sinh viên có thể bắt đầu quá trình đăng ký học phần.
+
+Ngoài chức năng đăng ký chính, ứng dụng còn cung cấp khả năng xem chương trình đào tạo chi tiết của ngành học, giúp sinh viên lên kế hoạch đăng ký tín chỉ một cách hiệu quả. Sinh viên cũng có thể truy cập và cập nhật thông tin cá nhân của mình thông qua ứng dụng.
+
+Sau khi hoàn tất đăng ký, ứng dụng tự động tổng hợp và hiển thị thời khóa biểu dự kiến cho sinh viên. Đồng thời, sinh viên có thể xem trước thông tin về giảng viên được phân công giảng dạy cho từng môn học trong học kỳ.
+Ứng dụng không chỉ giúp sinh viên tiết kiệm thời gian mà còn hỗ trợ phòng đào tạo quản lý dữ liệu hiệu quả hơn.
+
+Ứng dụng này được thiết kế để đáp ứng nhu cầu đăng ký học phần của sinh viên nhằm nâng cao hiệu quả quản lý học phần cho nhà trường, đồng thời giúp sinh viên dễ dàng theo dõi và quản lý thời gian học tập một cách hiệu quả.
+
+\subsection*{2. Giải pháp công nghệ}
+\addcontentsline{toc}{subsection}{\uline{Giải pháp công nghệ}}
+
+\subsubsection*{Kiến trúc hệ thống}
+\addcontentsline{toc}{subsubsection}{\uline{Kiến trúc hệ thống}}
+
+Ứng dụng này được thiết kế theo kiến trúc Client-Server, với các thành phần chính sau:
+
+\begin{itemize}
+    \item \textbf{Client}: Đây là phần mềm được cài đặt trên thiết bị di động của sinh viên, bao gồm ứng dụng di động. Client sẽ kết nối đến Server thông qua mạng internet để lấy dữ liệu và thực hiện các tác vụ liên quan đến đăng ký học phần.
+    \item \textbf{Server}: Đây là phần mềm được cài đặt trên máy chủ, cung cấp dịch vụ cho Client. Server sẽ lưu trữ và quản lý dữ liệu của sinh viên, bao gồm thông tin đăng ký học phần, lịch học, thông tin cá nhân, và thông tin liên hệ của giảng viên.
+\end{itemize}
+
+% chèn hình kiến trúc ỏ đây
+
+Kiến trúc hệ thống này có sử dụng các công nghệ như sau:
+
+\begin{itemize}
+    \item Front-end: vì đây là ứng dụng kết nối với server, có hai loại công nghệ được sử dụng là:
+    \begin{itemize}
+        \item \textbf{Mobile app} (dành cho phía sinh viên): Sử dụng React Native để xây dựng ứng dụng đa nền tảng (iOS/Android), tối ưu trải nghiệm trên thiết bị di động.
+        \item \textbf{Web app} (dành cho phía  quản trị viên): ử dụng Vite + React để tạo giao diện quản lý tốc độ cao, hỗ trợ các thao tác phức tạp như duyệt đăng ký, quản lý môn học.
+    \end{itemize}
+    \item Back-end: sử dụng Node.js để xây dựng API, xử lý các yêu cầu từ Client, kết nối đến cơ sở dữ liệu và trả về kết quả cho Client.
+    \item Database: MySQL làm hệ quản trị cơ sở dữ liệu quan hệ, lưu trữ thông tin người dùng, môn học, đăng ký học phần, và thời khóa biểu.
+\end{itemize}
+
+\subsubsection*{Công nghệ nổi bật}
+\addcontentsline{toc}{subsubsection}{\uline{Công nghệ nổi bật}}
+
+\begin{itemize}
+    \item Tích hợp thời khóa biểu động: Dữ liệu môn học sau khi đăng ký được tự động tính toán và hiển thị ngay lập tức trên mobile app.
+    \item Xử lý xung đột lịch học: Thuật toán kiểm tra xung đột dựa trên thời gian học từng môn (lý thuyết/thực hành).
+    \item Giao diện người dùng thân thiện: Mobile app được thiết kế với giao diện đơn giản, dễ sử dụng, giúp người dùng dễ dàng đăng ký học phần.
+    \item Bảo mật: Xác thực người dùng bằng JWT, phân quyền nghiêm ngặt (sinh viên, giảng viên, admin).
+    \item Tối ưu hiệu suất cho cả front-end và back-end.
+\end{itemize}
+
+\subsubsection*{Lý do lựa chọn công nghệ}
+\addcontentsline{toc}{subsubsection}{\uline{Lý do lựa chọn công nghệ}}
+
+%Có thể ngồi sửa lại nội dung này cho phù hợp.
+\begin{itemize}
+    \item \textbf{React Native}: 
+    \begin{itemize}
+        \item Tiết kiệm thời gian phát triển
+        \item Tận dụng tối đa code reuse giữa 2 nền tảng mobile
+    \end{itemize}
+    
+    \item \textbf{Vite + React}:
+    \begin{itemize}
+        \item Tốc độ build nhanh
+        \item Phù hợp với web admin cần cập nhật dữ liệu thường xuyên
+    \end{itemize}
+    
+    \item \textbf{Node.js + MySQL}:
+    \begin{itemize}
+        \item Dễ dàng mở rộng
+        \item Phù hợp với lượng truy cập lớn trong giai đoạn đăng ký học phần cao điểm
+    \end{itemize}
+\end{itemize}

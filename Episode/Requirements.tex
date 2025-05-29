@@ -1,0 +1,91 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+
+\subsection*{1. Phân tích thị trường}
+\addcontentsline{toc}{subsection}{\uline{Phân tích thị trường}}
+
+\subsubsection*{Xu hướng}
+Hiện nay, trong thời đại chính phủ đang tích cực thúc đẩy hiện đại hóa, tự động hóa các quy trình thủ tục trong nền công nghiệp 4.0, các trường đại học tại Việt Nam đang dần chuyển đổi số trong công tác quản lý đào tạo, đặc biệt là quy trình đăng ký học phần. Một số xu hướng nổi bật có thể kể đến là:
+
+\begin{itemize}
+    \item \textbf{Ứng dụng di động trong giáo dục}: Học sinh, sinh viên ngày càng ưu tiên sử dụng điện thoại để thực hiện các thao tác học tập (đăng ký môn học, xem điểm, tra cứu lịch thi) vì đó là phương thức tiện lợi nhất.
+    \item \textbf{Tích hợp thời khóa biểu tự động}: Các hệ thống hiện đại không chỉ dừng lại ở đăng ký môn học mà còn tự động sắp xếp lịch học và cảnh báo xung đột, giúp cho sinh viên có thể thông tin chính xác hơn về thời gian học.
+    \item \textbf{Cá nhân hóa trải nghiệm}: Trong một số trường hợp, sinh viên mong muốn hệ thống có thể gợi ý môn học phù hợp với ngành học, tiến độ tích lũy tín chỉ.
+    \item \textbf{Tiện ích và tiện nghi}: Hệ thống cần cung cấp các tiện ích như tính năng lưu trữ dữ liệu, đồng bộ hóa giữa các thiết bị, giúp sinh viên có thể truy cập thông tin từ mọi nơi.
+\end{itemize}
+
+\subsection*{2. Nhu cầu thực tế}
+\addcontentsline{toc}{subsection}{\uline{Nhu cầu thực tế}}
+
+\textbf{Đối với sinh viên:}
+\begin{itemize}
+    \item Cần một ứng dụng đơn giản, tốc độ cao, có thể đăng ký môn học mọi lúc mọi nơi.
+    \item Mong muốn xem ngay thời khóa biểu sau khi đăng ký để chủ động sắp xếp lịch cá nhân.
+    \item Tránh tình trạng xung đột lịch học, quá tải tín chỉ do thao tác thủ công.
+\end{itemize}
+
+\textbf{Đối với nhà trường:}
+\begin{itemize}
+    \item Giảm tải công việc cho phòng đào tạo, tránh sai sót trong quản lý dữ liệu đăng ký.
+    \item Cần hệ thống báo cáo tự động để theo dõi tỷ lệ đăng ký môn học, từ đó phân bổ giảng viên sao cho phù hợp.
+\end{itemize}
+
+\subsection*{3. Đối tượng sử dụng}
+\addcontentsline{toc}{subsection}{\uline{Đối tượng sử dụng}}
+
+
+\begin{center}
+    \begin{table}[H]
+    \begin{tabular}{|p{2.5cm}|p{6cm}|p{4cm}|}
+    \hline
+    \textbf{Đối tượng} & \textbf{Nhu cầu chính} & \textbf{Lợi ích từ ứng dụng} \\
+    \hline
+    Sinh viên & 
+    \begin{itemize}
+        \item Đăng ký môn học nhanh chóng
+        \item Xem thời khóa biểu ngay sau khi đăng ký
+    \end{itemize} & 
+    Tiết kiệm thời gian, tránh xung đột lịch \\
+    \hline
+    Giảng viên & 
+    \begin{itemize}
+        \item Theo dõi danh sách sinh viên đăng ký môn học
+        \item Xem lịch giảng dạy
+    \end{itemize} & 
+    Chủ động trong công tác giảng dạy \\
+    \hline
+    Quản trị viên & 
+    \begin{itemize}
+        \item Duyệt đăng ký, mở/đóng lớp học
+        \item Xuất báo cáo thống kê
+    \end{itemize} & 
+    Quản lý tập trung, giảm sai sót \\
+    \hline
+    \end{tabular}
+    \end{table}
+\end{center}
+
+\subsection*{4. Đánh giá hệ thống hiện có ở thời điểm này}
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Một số trường đã có hệ thống đăng ký học phần qua web (VD: Đại học Bách Khoa, Đại học Kinh tế Quốc dân).
+    \item Cung cấp đủ chức năng cơ bản: đăng ký môn, hủy môn, xem điểm, v.v\dots
+    \item Một số trường còn cho phép sinh viên xem thông tin của giáo viên ngay trong thời khóa biểu.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Giao diện web không tối ưu cho mobile, gây khó khăn khi thao tác.
+    \item Thiếu tính năng thời khóa biểu tích hợp, sinh viên phải tự tổng hợp thủ công.
+    \item Một số trường vẫn còn phải dùng chung từ một ứng dụng bên thứ ba, từ đó làm cho thông tin không được nhất quán và đôi lúc còn tiềm ẩn rủi ro bảo mật.
+\end{itemize}
+
+Từ những gì nêu trên, mục tiêu của ứng dụng này đề ra là:
+\begin{itemize}
+    \item Giải quyết điểm yếu của hệ thống hiện tại bằng ứng dụng di động chuyên biệt.
+    \item Tiên phong trong việc tích hợp thời khóa biểu tự động và gợi ý môn học thông minh.
+    \item Dễ dàng mở rộng sang các trường đại học khác nhờ kiến trúc module.
+\end{itemize}
+
+\end{document}
